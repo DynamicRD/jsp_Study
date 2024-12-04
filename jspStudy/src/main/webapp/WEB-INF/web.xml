@@ -47,4 +47,30 @@
     <servlet-name>memberList</servlet-name>
     <url-pattern>/memberList</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>hello</servlet-name>
+    <servlet-class>co.kh.dev.Hello</servlet-class>
+    <init-param>
+      <param-name>phone</param-name>
+      <param-value>010-2971-6789</param-value>
+    </init-param>
+    <init-param>
+      <param-name>id</param-name>
+      <param-value>123456</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hello</servlet-name>
+    <url-pattern>/hello.do</url-pattern>
+  </servlet-mapping>
+  <!-- <servlet>
+    <description></description>
+    <display-name>loginMemberList</display-name>
+    <servlet-name>loginMemberList</servlet-name>
+    <servlet-class>co.kh.dev.login.LoginMemberList</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>loginMemberList</servlet-name>
+    <url-pattern>/loginMemberList.do</url-pattern>
+  </servlet-mapping> -->
 </web-app>
