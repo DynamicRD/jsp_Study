@@ -63,14 +63,4 @@
     <servlet-name>hello</servlet-name>
     <url-pattern>/hello.do</url-pattern>
   </servlet-mapping>
-  <!-- <servlet>
-    <description></description>
-    <display-name>loginMemberList</display-name>
-    <servlet-name>loginMemberList</servlet-name>
-    <servlet-class>co.kh.dev.login.LoginMemberList</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>loginMemberList</servlet-name>
-    <url-pattern>/loginMemberList.do</url-pattern>
-  </servlet-mapping> -->
 </web-app>

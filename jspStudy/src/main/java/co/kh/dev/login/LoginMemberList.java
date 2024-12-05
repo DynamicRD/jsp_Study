@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import co.kh.dev.common.DBUtility;
+
 @WebServlet("/loginMemberList.do")
 public class LoginMemberList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -24,8 +26,7 @@ public class LoginMemberList extends HttpServlet {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "webuser", "123456");
+			con = DBUtility.dbCon();
 			pstmt = con.prepareStatement(LOGIN_SELECT);
 			rs = pstmt.executeQuery();
 
@@ -52,32 +53,10 @@ public class LoginMemberList extends HttpServlet {
 			out.println("<p align=center><a href=/jspStudy/loginServlet.do>이전화면으로</a></p>");
 			out.println("</body>");
 			out.println("</html>");
-		} catch (ClassNotFoundException e) {
-			System.out.println(e.toString());
 		} catch (SQLException e) {
 			System.out.println(e.toString());
 		} finally {
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					System.out.println(e.toString());
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					System.out.println(e.toString());
-				}
-			}
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					System.out.println(e.toString());
-				}
-			}
+			DBUtility.dbClose(con, pstmt, rs);
 		}
 	}
 

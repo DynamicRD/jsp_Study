@@ -41,7 +41,8 @@ public class LoginServlet extends HttpServlet {
 				out.println("</tr>");
 				out.println("<tr>");
 				out.println("<td align='center'>");
-				out.println("<a href='/jspStudy/loginMemberList.do'>회원정보</a>");
+				out.println("<a href='/jspStudy/loginMemberList.do'>회원들정보</a>");
+				out.println("<a href='/jspStudy/loginMemberChange.do'>회원정보변경</a>");
 				out.println("<a href='/jspStudy/logoutServlet.do'>로그아웃</a>");
 				out.println("</td>");
 				out.println("</tr>");

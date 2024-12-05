@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import co.kh.dev.common.DBUtility;
+
 @WebServlet("/loginCheck.do")
 public class LoginCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -30,12 +32,10 @@ public class LoginCheckServlet extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null; // 오라클에서 작업할 쿼리문 사용할게 하는 명령문
 			boolean successFlag = false;
-			String url = "jdbc:oracle:thin:@127.0.0.1:1521/xe";
 			String MEMBER_SELECT = "select * from login";
+			con = DBUtility.dbCon();
 			
 			try {
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-				con = DriverManager.getConnection(url, "webuser", "123456");
 				pstmt = con.prepareStatement(MEMBER_SELECT);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -46,27 +46,10 @@ public class LoginCheckServlet extends HttpServlet {
 						break;
 					}
 				}
-			} catch (ClassNotFoundException e) {
-				System.out.println(e.toString());
 			} catch (SQLException e) {
 				System.out.println(e.toString());
 			} finally {
-				if (con != null) {
-					try {
-						con.close();
-
-					} catch (SQLException e) {
-						System.out.println(e.toString());
-					}
-				}
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-
-					} catch (SQLException e) {
-						System.out.println(e.toString());
-					}
-				}
+				DBUtility.dbClose(con, pstmt, rs);
 			}
 
 			//3. 체크확인 로그인이 인정이 되면 세션을 만들어서 저장한다.
