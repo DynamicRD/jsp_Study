@@ -17,8 +17,8 @@ import co.kh.dev.common.DBUtility;
 import co.kh.dev.login.model.LoginDAO;
 import co.kh.dev.login.model.LoginVO;
 
-@WebServlet("/loginMemberChangeDB.do")
-public class LoginMemberChangeDB extends HttpServlet {
+@WebServlet("/memberDelete.do")
+public class MemberDelete extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -29,33 +29,21 @@ public class LoginMemberChangeDB extends HttpServlet {
 		// 1.1 전송된값을 utf-8셋팅하기
 		request.setCharacterEncoding("UTF-8");
 		// 1.1 정보가져오기
-		String pass = request.getParameter("pass");
-		String pass1 = request.getParameter("pass1");
-		System.out.println(pass);
-		System.out.println(pass1);
 		HttpSession session = request.getSession(false);
-		System.out.println("세션고유아이디 " + session.getId());
-		// 사용자 정보 id,pass
 		String id = (String) session.getAttribute("id");
-		// 2. table에 저장한다(프로토콜: 약속)
-		// 오라클에서 작업할 쿼리문 사용할게 하는 명령문
 		boolean successFlag = false;
-
-		if (pass.equals(pass1)) {
-			LoginDAO ld = new LoginDAO();
-			LoginVO lvo = new LoginVO(id, pass);
-			successFlag = ld.changeLogin(lvo);
-		}
+		LoginDAO ldao = new LoginDAO();
+		LoginVO lvo = new LoginVO(id);
+		successFlag = ldao.deleteLogin(lvo);
 
 		// 3.화면출력
 		if (successFlag == true) {
-			session.setAttribute("pass", pass);
-			System.out.println("비번변경성공");
+			System.out.println("탈퇴성공");
 			out.println("<html>");
 			out.println("<head>");
 			out.println("<script>");
 			out.println("window.onload = function() {");
-			out.println("    alert('비밀번호를 잘 변경했습니다');");
+			out.println("    alert('탈퇴 성공했습니다.');");
 			out.println("    window.location.href = '/jspStudy/loginServlet.do';"); // 리다이렉트
 			out.println("};");
 			out.println("</script>");
@@ -63,13 +51,17 @@ public class LoginMemberChangeDB extends HttpServlet {
 			out.println("<body>");
 			out.println("</body>");
 			out.println("</html>");
+			if (session != null) {
+				session.invalidate();
+			}
+			System.out.println("탈퇴완료");
 		} else {
-			System.out.println("비번변경실패");
+			System.out.println("탈퇴실패");
 			out.println("<html>");
 			out.println("<head>");
 			out.println("<script>");
 			out.println("window.onload = function() {");
-			out.println("    alert('비밀번호가 서로 불일치해서 변경실패했습니다.');");
+			out.println("    alert('세상에 탈퇴실패가 가능했나요.');");
 			out.println("    window.location.href = '/jspStudy/loginServlet.do';"); // 리다이렉트
 			out.println("};");
 			out.println("</script>");
