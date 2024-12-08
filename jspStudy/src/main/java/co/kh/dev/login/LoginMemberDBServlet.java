@@ -1,6 +1,7 @@
 package co.kh.dev.login;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,44 +14,59 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.kh.dev.common.DBUtility;
+import co.kh.dev.login.model.LoginDAO;
+import co.kh.dev.login.model.LoginVO;
 
 @WebServlet("/loginMemberDBServlet.do")
 public class LoginMemberDBServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html;Charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+		
 		// 1.1 전송된값을 utf-8셋팅하기
 		request.setCharacterEncoding("UTF-8");
 		// 1.1 정보가져오기
 		String id = request.getParameter("id");
 		String pass = request.getParameter("pass");
-
-		// 2. table에 저장한다(프로토콜: 약속)
-		Connection con = null;
-		PreparedStatement pstmt = null; // 오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		String name = request.getParameter("name");
 		boolean successFlag = false;
-		String MEMBER_INSERT = "insert into login values(?,?)";
-		try {
-			con = DBUtility.dbCon();
-			pstmt = con.prepareStatement(MEMBER_INSERT);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pass);
-
-			int count = pstmt.executeUpdate();
-			successFlag = (count != 0) ? (true) : (false);
-		} catch (SQLException e) {
-			System.out.println(e.toString());
-		} finally {
-			DBUtility.dbClose(con, pstmt);
-		}
-
+		LoginDAO ldao = new LoginDAO();
+		LoginVO lvo = new LoginVO(id,pass,name);
+		successFlag = ldao.newLogin(lvo);
 		// 3.화면출력
 		if (successFlag == true) {
 			System.out.println("가입성공");
-			response.sendRedirect("/jspStudy/loginServlet.do");
+			   out.println("<html>");
+	            out.println("<head>");
+	            out.println("<script>");
+	            out.println("window.onload = function() {");
+	            out.println("    alert('가입 성공했습니다.');");
+	            out.println("    window.location.href = '/jspStudy/loginServlet.do';");  // 리다이렉트
+	            out.println("};");
+	            out.println("</script>");
+	            out.println("</head>");
+	            out.println("<body>");
+	            out.println("</body>");
+	            out.println("</html>");
+	            out.close();
 		} else {
 			System.out.println("가입실패");
-			response.sendRedirect("/jspStudy/loginServlet.do");
+			   out.println("<html>");
+	            out.println("<head>");
+	            out.println("<script>");
+	            out.println("window.onload = function() {");
+	            out.println("    alert('가입 실패했습니다.');");
+	            out.println("    window.location.href = '/jspStudy/loginServlet.do';");  // 리다이렉트
+	            out.println("};");
+	            out.println("</script>");
+	            out.println("</head>");
+	            out.println("<body>");
+	            out.println("</body>");
+	            out.println("</html>");
+	            out.close();
 		}
 	}
 	
