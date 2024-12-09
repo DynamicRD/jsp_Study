@@ -28,112 +28,107 @@ public class LoginServlet extends HttpServlet {
 			String superID = "admin";
 			// 2.세션정보가 있으면 아이디와 패스워드를 가져온다. 없으면 로그인창으로 이동
 			if (session == null) {
-				out.println("<html>");
-				out.println("<head>");
-				out.println("<style>");
-				out.println("#my_table{");
-				out.println("margin: 0 auto;");
-				out.println("}");
-				out.println("</style>");
-				out.println("</head>");
-				out.println("<body>");
-				out.print("<form method='post' action='/jspStudy/loginCheck.do'>");
-				out.println("<table border='1' width='300' id ='my_table'>");
-				out.println("<tr>");
-				out.println("<th width='100'>아이디</th>");
-				out.println("<td width='200'>&nbsp;<input type='text' name='id'></td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<th width='100'>비번</th>");
-				out.println("<td width='200'>&nbsp;<input type='password' name='pass'></td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td align='center' colspan='2'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/loginMemberServlet.do' \" value='회원가입'>");
-				out.println("<input type='submit' value='로그인'>");
-				out.println("</td>");
-				out.println("</tr>");
-				out.println("</form>");
-				out.println("</table>");
-				out.println("</body>");
-				out.println("</html>");
-			} else if (session != null && ((String) session.getAttribute("id")).equals(superID)) {
-				System.out.println("세션고유아이디 " + session.getId());
-				// 사용자 정보 id,pass
-				String id = (String) session.getAttribute("id");
-				String pass = (String) session.getAttribute("pass");
-				String name = (String) session.getAttribute("name");
+			    // 세션이 없을 경우 로그인 화면을 출력
+			    out.println("<html>");
+			    out.println("<head>");
+			    out.println("<style>");
+			    out.println("#my_table{");
+			    out.println("margin: 0 auto;");
+			    out.println("}"); 
+			    out.println("</style>");
+			    out.println("</head>");
+			    out.println("<body>");
+			    out.print("<form method='post' action='/jspStudy/loginCheck.do'>");
+			    out.println("<table border='1' width='300' id ='my_table'>");
+			    out.println("<tr>");
+			    out.println("<th width='100'>아이디</th>");
+			    out.println("<td width='200'>&nbsp;<input type='text' name='id'></td>");
+			    out.println("</tr>");
+			    out.println("<tr>");
+			    out.println("<th width='100'>비번</th>");
+			    out.println("<td width='200'>&nbsp;<input type='password' name='pass'></td>");
+			    out.println("</tr>");
+			    out.println("<tr>");
+			    out.println("<td align='center' colspan='2'>");
+			    out.println("<input type='button' onclick = \"location.href = '/jspStudy/loginMemberServlet.do' \" value='회원가입'>");
+			    out.println("<input type='submit' value='로그인'>");
+			    out.println("</td>");
+			    out.println("</tr>");
+			    out.println("</form>");
+			    out.println("</table>");
+			    out.println("</body>");
+			    out.println("</html>");
+			} else {
+			    // 세션이 있을 때 "id" 속성이 null이 아닌지 확인
+			    String id = (String) session.getAttribute("id");
+			    if (id != null && id.equals(superID)) { // id가 null이 아니고 superID와 일치하는 경우
+			        System.out.println("세션고유아이디 " + session.getId());
+			        String pass = (String) session.getAttribute("pass");
+			        String name = (String) session.getAttribute("name");
 
-				out.println("<html>");
-				out.println("<head>");
-				out.println("<style>");
-				out.println("#my_table{");
-				out.println("margin: 0 auto;");
-				out.println("}");
-				out.println("</style>");
-				out.println("</head>");
-				out.println("<body>");
-				out.println("<table border='1' width='500' id ='my_table'>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>관리자 계정 "+id+" 입니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>" + pass + " 패스워드입니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>" + name + " 이름입니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td align='center'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/loginMemberList.do' \" value='회원들 정보'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/logoutServlet.do' \" value='로그아웃'>");
-				out.println("</td>");
-				out.println("</tr>");
-				out.println("</table>");
-				out.println("</body>");
-				out.println("</html>");
-			} else if (session != null) {
-				System.out.println("세션고유아이디 " + session.getId());
-				// 사용자 정보 id,pass
-				String id = (String) session.getAttribute("id");
-				String pass = (String) session.getAttribute("pass");
-				String name = (String) session.getAttribute("name");
+			        out.println("<html>");
+			        out.println("<head>");
+			        out.println("<style>");
+			        out.println("#my_table{");
+			        out.println("margin: 0 auto;");
+			        out.println("}"); 
+			        out.println("</style>");
+			        out.println("</head>");
+			        out.println("<body>");
+			        out.println("<table border='1' width='500' id ='my_table'>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>관리자 계정 " + id + " 입니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>" + pass + " 패스워드입니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>" + name + " 이름입니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td align='center'>");
+			        out.println("<input type='button' onclick = \"location.href = '/jspStudy/loginMemberList.do' \" value='회원들 정보'>");
+			        out.println("<input type='button' onclick = \"location.href = '/jspStudy/logoutServlet.do' \" value='로그아웃'>");
+			        out.println("</td>");
+			        out.println("</tr>");
+			        out.println("</table>");
+			        out.println("</body>");
+			        out.println("</html>");
+			    } else if (id != null) {  // id가 null이 아니면
+			        System.out.println("세션고유아이디 " + session.getId());
+			        String pass = (String) session.getAttribute("pass");
+			        String name = (String) session.getAttribute("name");
 
-				out.println("<html>");
-				out.println("<head>");
-				out.println("<style>");
-				out.println("#my_table{");
-				out.println("margin: 0 auto;");
-				out.println("}");
-				out.println("</style>");
-				out.println("</head>");
-				out.println("<body>");
-				out.println("<table border='1' width='500' id ='my_table'>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>" + id + " 님 로그인 되었습니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>" + pass + " 패스워드입니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td width='500' align='center'>" + name + " 이름입니다.</td>");
-				out.println("</tr>");
-				out.println("<tr>");
-				out.println("<td align='center'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/loginMemberChange.do' \" value='회원정보변경'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/logoutServlet.do' \" value='로그아웃'>");
-				out.println(
-						"<input type='button' onclick = \"location.href = '/jspStudy/memberReallyDelete.do' \" value='탈퇴하기'>");
-				out.println("</td>");
-				out.println("</tr>");
-				out.println("</table>");
-				out.println("</body>");
-				out.println("</html>");
+			        out.println("<html>");
+			        out.println("<head>");
+			        out.println("<style>");
+			        out.println("#my_table{");
+			        out.println("margin: 0 auto;");
+			        out.println("}"); 
+			        out.println("</style>");
+			        out.println("</head>");
+			        out.println("<body>");
+			        out.println("<table border='1' width='500' id ='my_table'>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>" + id + " 님 로그인 되었습니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>" + pass + " 패스워드입니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td width='500' align='center'>" + name + " 이름입니다.</td>");
+			        out.println("</tr>");
+			        out.println("<tr>");
+			        out.println("<td align='center'>");
+			        out.println("<input type='button' onclick = \"location.href = '/jspStudy/loginMemberChange.do' \" value='회원정보변경'>");
+			        out.println("<input type='button' onclick = \"location.href = '/jspStudy/logoutServlet.do' \" value='로그아웃'>");
+			        out.println("<input type='button' onclick = \"location.href = '/jspStudy/memberReallyDelete.do' \" value='탈퇴하기'>");
+			        out.println("</td>");
+			        out.println("</tr>");
+			        out.println("</table>");
+			        out.println("</body>");
+			        out.println("</html>");
+			    }
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
