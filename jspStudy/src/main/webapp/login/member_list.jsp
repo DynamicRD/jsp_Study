@@ -8,8 +8,6 @@
 LoginDAO ldao = new LoginDAO();
 ArrayList<LoginVO> list = ldao.listLogin(); // DB에서 사용자 목록 가져오기
 response.setContentType("text/html;charset=UTF-8");
-ldao = new LoginDAO();
-list = ldao.listLogin();
 %>
 
 <html>
