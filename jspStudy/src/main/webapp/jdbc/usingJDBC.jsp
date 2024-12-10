@@ -1,17 +1,16 @@
-<%@page import="java.util.ArrayList"%>
 <%@page import="co.kh.dev.tempmember.model.TempMemberDAO"%>
 <%@page import="co.kh.dev.tempmember.model.TempMemberVO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
-
-
-
-
+<!-- 1.사용자정보를 가져온다  -->
+<!-- 2.curd  -->
 <%
-// 로그인 정보 리스트 가져오기
-TempMemberDAO tmdao = new TempMemberDAO();
-ArrayList<TempMemberVO> tempList = tmdao.selectDB();
-int counter = 0;
+//로그인 정보 리스트 가져오기
+TempMemberDAO tmdao = new TempMemberDAO(); 
+ArrayList<TempMemberVO> tempList  = tmdao.selectDB(); // DB에서 사용자 목록 가져오기
+int counter = 0; 
 %>
+<!-- 3.화면설계(자바코드에 해야되는데 - > jsp service함수에서 진행한다. -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,30 +34,26 @@ int counter = 0;
 			<td><strong>ADDRESS</strong></td>
 			<td><strong>JOB</strong></td>
 		</tr>
-		<%
-		for(TempMemberVO data : tempList){
-		%>
+<%
+      for( TempMemberVO data  :  tempList){
+%>
 		<tr>
-			<td><%=data.getId()%></td>
-			<td><%=data.getPasswd()%></td>
-			<td><%=data.getName()%></td>
-			<td><%=data.getMemNum1()%></td>
-			<td><%=data.getMemNum2()%></td>
-			<td><%=data.geteMail()%></td>
-			<td><%=data.getPhone()%></td>
-			<td><%=data.getZipcode()%></td>
-			<td><%=data.getAddress()%></td>
-			<td><%=data.getJob()%></td>
-			<%
-			counter++;
-			} //end if
-			%>
+			<td><%= data.getId() %></td>
+			<td><%= data.getPasswd() %></td>
+			<td><%= data.getName() %></td>
+			<td><%= data.getMemNum1() %></td>
+			<td><%= data.getMemNum2() %></td>
+			<td><%= data.geteMail() %></td>
+			<td><%= data.getPhone() %></td>
+			<td><%= data.getZipcode() %></td>
+			<td><%= data.getAddress() %></td>
+			<td><%= data.getJob() %></td>
+<%
+         counter++;
+      }//end for
+%>
 		</tr>
 	</table>
-	<br></br>
-	total records : <%= counter %> 
-	</body>
+	<br></br> total records : <%= counter %>
+</body>
 </html>
-	
-	
-	

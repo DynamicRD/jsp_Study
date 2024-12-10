@@ -10,8 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 
+//싱글톤
 public final class ConnectionPool {
-	// 1. Oracle Driver를 정적처리해서 로드한다
+	// 1. Oracle Driver를 정적처리해서 로드한다.
 	static {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -19,10 +20,9 @@ public final class ConnectionPool {
 			e.printStackTrace();
 		}
 	}
-
 	// 2. 멤버변수
 	private ArrayList<Connection> free;
-	private ArrayList<Connection> used; // 사용중인 커넥션을 저장하는 변수 private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	private ArrayList<Connection> used; // 사용중인 커넥션을 저장하는 변수
 	private int initialCons = 10; // 최초로 초기 커넥션수
 	private int maxCons = 20; // 최대 커넥션수
 	private int numCons = 0; // 총 Connection 수
@@ -30,7 +30,7 @@ public final class ConnectionPool {
 	private String pw = null;
 	private String url = null;
 
-	// 3. 싱글톤(자기참조 멤버변수,생성자함수,자기참조멤버변수 겟터)
+	// 3. 싱글톤(자기참조멤버변수, 생성자함수, 자기참조멤버변수 겟터)
 	private static ConnectionPool cp;
 
 	public static ConnectionPool getInstance() {
@@ -47,13 +47,13 @@ public final class ConnectionPool {
 		return cp;
 	}
 
-	// 생성자(ArrayList 생성하고,properties 로드하고,Connection 10개를 만들어서 free에 넣는다.
-	public ConnectionPool() {
-		// ArrayList 10개까지만 사용할게
+	// 생성자(ArrayList 생성하고, properties 로드하고, Connection 10개를 만들어서 free 넣는다
+	private ConnectionPool() {
+		// 1. ArrayList 10개 까지만 사용할게
 		free = new ArrayList<Connection>(initialCons);
 		used = new ArrayList<Connection>(initialCons);
 
-		// 2.db.properties 파일에서 id pw가져오기
+		// 2. db.properties 파일 에서 id, pw 가져오기
 		String filePath = "C:\\dev\\eclipseWorkspace\\jspStudy\\src\\main\\java\\co\\kh\\dev\\common\\db.properties";
 		Properties pt = new Properties();
 		try {
@@ -61,10 +61,11 @@ public final class ConnectionPool {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		id = (pt.getProperty("id"));
-		pw = (pt.getProperty("pw"));
-		url = (pt.getProperty("url"));
-		// 데이터베이스 연결된 Connection 10개를 만들어서 free Connection 저장한다.
+		id = pt.getProperty("id");
+		pw = pt.getProperty("pw");
+		url = pt.getProperty("url");
+
+		// 데이타베이스연결된 Connection 10개를 만들어서 free Connection 저장한다.
 		while (numCons < initialCons) {
 			addConnection();
 		}
@@ -75,9 +76,10 @@ public final class ConnectionPool {
 		free.add(getNewConnection());
 	}
 
-	// Connection을 만들어서 리턴한다.
+	// Connection 를 만들어서 리턴한다.
 	private Connection getNewConnection() {
 		Connection con = null;
+
 		try {
 			con = DriverManager.getConnection(url, id, pw);
 			numCons++;
@@ -89,10 +91,10 @@ public final class ConnectionPool {
 	}
 
 	public synchronized Connection dbCon() {
-		// 1.free ArrayList Connection 들어있는지 확인(현재 10개가 있을것으로 추정)
+		// 1. free ArrayList Connection 들어있는지 확인(현재 10개 있을거로 추정)
 		Connection con = null;
 		if (free.isEmpty()) {
-			// 최종 max 20개를 다시 만든다
+			// 최종 max 20 개를 다시 만든다.
 			while (numCons < maxCons) {
 				addConnection();
 			}
@@ -101,7 +103,7 @@ public final class ConnectionPool {
 		free.remove(con);
 		used.add(con);
 
-		return null;
+		return con;
 	}
 
 	public void dbClose(Connection con, ResultSet rs, Statement... stmts) {
@@ -117,7 +119,6 @@ public final class ConnectionPool {
 				}
 			}
 		}
-
 		if (rs != null) {
 			try {
 				rs.close();
@@ -143,7 +144,7 @@ public final class ConnectionPool {
 
 	}
 
-	public void dbClose(Connection con, PreparedStatement pstmt, ResultSet rs) {
+	public  void dbClose(Connection con, PreparedStatement pstmt, ResultSet rs) {
 		if (con != null) {
 			releaseConnection(con);
 		}
@@ -164,7 +165,7 @@ public final class ConnectionPool {
 		}
 	}
 
-	public void dbClose(Connection con, Statement stmt, ResultSet rs) {
+	public  void dbClose(Connection con, Statement stmt, ResultSet rs) {
 		if (con != null) {
 			releaseConnection(con);
 		}
@@ -186,10 +187,9 @@ public final class ConnectionPool {
 
 	}
 
-	// ConnectionPool 만들어서 Connection free ArrayList에 반납하고,아니면 close 퍼리한다.
+	//ConnectionPool 만들어지 Connection free ArrayList에 반납하고, 아니면 close 처리한다.
 	public synchronized void releaseConnection(Connection con) {
 		boolean flag = false;
-
 		if (used.contains(con) == true) {
 			used.remove(con);
 			numCons--;
@@ -197,37 +197,39 @@ public final class ConnectionPool {
 			numCons++;
 			flag = true;
 		}
+
 		try {
-			if (flag == true) {
+			if (flag == false) {
 				con.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	//현재 ConnectionPool 있는 connection 모두 제거한다.
 	public void closeAll() {
-		
-		//현재 ConnectionPool에 있는 connection 모두 제거
-		for (int i = 0; i < used.size(); i++) {
-			Connection _con = (Connection) used.get(i);
+		for(int i=0;i<used.size();i++){
+			Connection _con = (Connection)used.get(i);
 			used.remove(i--);
-			try {
+			try{
 				_con.close();
-			} catch (SQLException sqle) {
+			}catch(SQLException sqle){
 				sqle.printStackTrace();
 			}
-		}
+		}		
 		// free에 있는 커넥션을 모두 삭제해 버림.
-		for (int i = 0; i < free.size(); i++) {
-			Connection _con = (Connection) free.get(i);
+		for(int i=0;i<free.size();i++){
+			Connection _con = (Connection)free.get(i);
 			free.remove(i--);
-			try {
+			try{
 				_con.close();
-			} catch (SQLException sqle) {
+			}catch(SQLException sqle){
 				sqle.printStackTrace();
 			}
-		}
-
+		}		
 	}
 }
+
+
+
