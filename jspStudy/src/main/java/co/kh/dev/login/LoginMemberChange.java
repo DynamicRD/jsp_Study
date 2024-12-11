@@ -20,9 +20,16 @@ public class LoginMemberChange extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		// 사용자 정보 id,pass
 		out.println("<html>");
+		out.println("<head>");
+		out.println("<style>");
+		out.println("#my_table{");
+		out.println("margin: 0 auto;");
+		out.println("}");
+		out.println("</style>");
+		out.println("</head>");
 		out.println("<body>");
 		out.print("<form method='post' action='/jspStudy/loginMemberChangeDB.do'>");
-		out.println("<table border='1' width='300'>");
+		out.println("<table border='1' width='400' id='my_table'>");
 		out.println("<tr>");
 		out.println("<th width='200'>새로운 비밀번호</th>");
 		out.println("<td width='200'>&nbsp;<input type='password' name='pass'></td>");

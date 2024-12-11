@@ -14,12 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import co.kh.dev.common.DBUtility;
+import co.kh.dev.login.model.LoginDAO;
+import co.kh.dev.login.model.LoginVO;
 
 @WebServlet("/loginMemberChangeDB.do")
 public class LoginMemberChangeDB extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html;Charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+
 		// 1.1 전송된값을 utf-8셋팅하기
 		request.setCharacterEncoding("UTF-8");
 		// 1.1 정보가져오기
@@ -32,34 +38,47 @@ public class LoginMemberChangeDB extends HttpServlet {
 		// 사용자 정보 id,pass
 		String id = (String) session.getAttribute("id");
 		// 2. table에 저장한다(프로토콜: 약속)
-		Connection con = null;
-		PreparedStatement pstmt = null; // 오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		// 오라클에서 작업할 쿼리문 사용할게 하는 명령문
 		boolean successFlag = false;
-		String MEMBER_UPDATE = "update login set pass = ? where id = ?";
-		try {
-			if(pass.equals(pass1)) {
-				con = DBUtility.dbCon();
-				pstmt = con.prepareStatement(MEMBER_UPDATE);
-				pstmt.setString(1, pass);
-				pstmt.setString(2, id);
 
-				int count = pstmt.executeUpdate();
-				successFlag = (count != 0) ? (true) : (false);
-				DBUtility.dbClose(con, pstmt);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.toString());
+		if (pass.equals(pass1)) {
+			LoginDAO ld = new LoginDAO();
+			LoginVO lvo = new LoginVO(id, pass);
+			successFlag = ld.changeLogin(lvo);
 		}
+
 		// 3.화면출력
 		if (successFlag == true) {
 			session.setAttribute("pass", pass);
 			System.out.println("비번변경성공");
-			response.sendRedirect("/jspStudy/loginServlet.do");
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<script>");
+			out.println("window.onload = function() {");
+			out.println("    alert('비밀번호를 잘 변경했습니다');");
+			out.println("    window.location.href = '/jspStudy/loginServlet.do';"); // 리다이렉트
+			out.println("};");
+			out.println("</script>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("</body>");
+			out.println("</html>");
 		} else {
 			System.out.println("비번변경실패");
-			response.sendRedirect("/jspStudy/loginServlet.do");
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<script>");
+			out.println("window.onload = function() {");
+			out.println("    alert('비밀번호가 서로 불일치해서 변경실패했습니다.');");
+			out.println("    window.location.href = '/jspStudy/loginServlet.do';"); // 리다이렉트
+			out.println("};");
+			out.println("</script>");
+			out.println("</head>");
+			out.println("<body>");
+			out.println("</body>");
+			out.println("</html>");
 		}
-		
+		out.close();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
