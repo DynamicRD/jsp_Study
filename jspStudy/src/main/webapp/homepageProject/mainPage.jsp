@@ -97,11 +97,16 @@
 		<div class="right">
 			로그인창
 			<div class="login">
+<<<<<<< HEAD
 			<% if(session.getAttribute("id") == null){ %>
 			<%@ include file="./loginMenu.jsp"%>
 			<%}else if(session != null){%>
 			<%@ include file="./loginComplete.jsp"%>
 			<%}%>		
+=======
+			<%@ include file="./loginMenu.jsp"%>
+				
+>>>>>>> 32e669fd1c705337160b3371263b806a371327dd
 			</div>
 		</div>
 	</div>
