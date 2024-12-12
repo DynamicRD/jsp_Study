@@ -16,6 +16,20 @@ import co.kh.dev.common.DBUtility;
 //역전주입 : 스프링부트가 자동으로 생성해서 객체를 주입한다.
 //@Repository("bdao")
 public class BoardDAO {
+	//싱글톤 1번
+	private static BoardDAO instance;
+	//싱글톤 2번
+	private BoardDAO() {}
+	//싱글톤 3번
+	public static BoardDAO getInstance() {
+		if(instance == null) {
+			synchronized (BoardDAO.class) {
+				instance = new BoardDAO();
+			}
+		}
+		
+		return instance;
+	}
 	private final String SELECT_SQL = "SELECT * FROM Board";
 	private final String SELECT_ONE_SQL = "SELECT * FROM Board WHERE ID = ?";
 	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Board WHERE ID = ?";
