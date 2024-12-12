@@ -7,17 +7,19 @@
 <title>Document</title>
 <link rel="stylesheet"  href="css/homepage.css" type="text/css">
 <script language="javascript" src="js/hompage.js"></script>
-<%if(session.getAttribute("loginFlag") != null) {%>
+<%if(session.getAttribute("loginFlag") != null || session.getAttribute("memberChangFlag") != null) {%>
 <link rel="stylesheet"  href="css/regform.css" type="text/css">
 <script language="javascript" src="js/regform.js"></script>
 <%} %>
 <script src="https://kit.fontawesome.com/de7b35df6f.js" async
 	crossorigin="anonymous"></script>
 </head>
-<%if(session.getAttribute("loginFlag") == null) {%>
+<%if(session.getAttribute("loginFlag") == null && session.getAttribute("memberChangFlag") == null) {%>
 <body onload="carousel();">
-<%}else{%>
+<%}else if(session.getAttribute("loginFlag") != null){%>
 <body onload="carousel(); inputCheck();">
+<%}else if(session.getAttribute("memberChangFlag") != null){%>
+<body onload="carousel(); inputCheck2();">
 <%}%>
 	<div class="header">
 		<p>
@@ -73,7 +75,7 @@
 		</div>
 		<div class="center">
 			
-			<%if(session.getAttribute("loginFlag") == null){%>
+			<%if(session.getAttribute("loginFlag") == null && session.getAttribute("memberChangFlag") == null){%>
 			게시판
 			<table class="maintable">
 				<tr>
@@ -102,9 +104,17 @@
 					<li><i class="fa-solid fa-angle-right"></i></li>
 				</ul>
 			</div>
-			<%}else{%>
+			<%//회원가입화면을 메인에 띄운다
+				}else if(session.getAttribute("loginFlag") != null){
+			%>
 			<%@ include file="./regForm.jsp"%>
-			<%} %>
+			<%//회원정보변경화면을 메인에 띄운다
+				}else if(session.getAttribute("memberChangFlag") != null){ 
+			%>
+			<%@ include file="./memberChange.jsp"%>
+			<%//메인화면 변경 종료
+				} 
+			%>
 		</div>
 		<div class="right">
 			로그인창

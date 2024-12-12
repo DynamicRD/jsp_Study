@@ -10,11 +10,13 @@ import java.util.ArrayList;
 import co.kh.dev.common.ConnectionPool;
 import co.kh.dev.common.DBUtility;
 import co.kh.dev.login.model.LoginVO;
+
 import co.kh.dev.memberone.model.ZipCodeVO;
 
 public class MemberDAO {
 	
 	private final String SELECT_SQL = "SELECT * FROM Member";
+	private final String SELECT_ONE_SQL = "SELECT * FROM Member WHERE ID = ?";
 	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Member WHERE ID = ?";
 	private final String INSERT_SQL = "insert into Member values(?,?,?,?,?,?,?,?)";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
@@ -144,4 +146,32 @@ public class MemberDAO {
 		return successFlag;
 	}
 
+	public MemberVO selectOneDB(MemberVO svo) {
+		ConnectionPool cp = ConnectionPool.getInstance(); 
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MemberVO resultVO =null;
+		try {
+			pstmt = con.prepareStatement(SELECT_ONE_SQL);
+			pstmt.setString(1, svo.getId());
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String id 		= rs.getString("ID");
+				String pass 	= rs.getString("pass");
+				String name 	= rs.getString("name");
+				String phone 	= rs.getString("phone");
+				String eMail 	= rs.getString("email");
+				String zipcode 	= rs.getString("zipcode");
+				String address1 = rs.getString("address1");
+				String address2	= rs.getString("address2");
+				resultVO = new MemberVO(id, pass, name, phone, eMail, zipcode, address1, address2);
+		} 
+			}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return resultVO;
+	}
 }

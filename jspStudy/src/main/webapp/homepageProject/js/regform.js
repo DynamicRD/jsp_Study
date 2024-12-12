@@ -115,5 +115,82 @@ function inputCheck(){
             return; 
            }
     }
+		
+function inputCheck2(){
+    //패턴검색
+    const pwdPattern =/^[\w]{6,10}$/; //영문자와 숫자, _ 6~10  
+    const namePattern =/^[가-힣]{2,4}|[A-Z]{1}[a-zA-Z\x20]{1,19}$/; //한글 2~4글자,영문자 2-20 첫글자는대문자 공백가능   
+    const telPattern =/^[\d]{2,3}-[\d]{3,4}-[\d]{4}$/; //\d 숫자만가능
+    const emailPattern =/^[a-z0-9_+.-]+@([a-z0-9-]+\.)+[a-z0-9]{2,4}$/;
+    //객체찾기
+    const inputPW1 = document.querySelector("#input-pw1"); 
+    const inputPW2 = document.querySelector("#input-pw2"); 
+    const inputName = document.querySelector("#input-name"); 
+    const inputTel= document.querySelector("#input-tel"); 
+    const inputEmail= document.querySelector("#input-email"); 
+    //주소객체찾기
+    const zipcode= document.querySelector("#zipcode");
+    const addr1= document.querySelector("#addr1");
+    const addr2= document.querySelector("#addr2");
+    const btnSearchAddr= document.querySelector("#btn-searchAddr");
+    //폼객체찾기
+    const myform= document.querySelector(".myform");
+
+
+		
+    //이벤트리스너등록및 핸들러처리
+    inputPW1.addEventListener("blur",()=>validate(inputPW1,pwdPattern, "영문자와 숫자, _ 6~10" ));
+    inputPW2.addEventListener("blur",()=>{
+        validate(inputPW2,pwdPattern, "영문자와 숫자, _ 6~10" );
+        if(inputPW1.value !== inputPW2.value){
+            inputPW2.nextSibling.textContent ="패스워드가 일치하지 않음";
+            inputPW2.nextSibling.style.color ="red";
+            inputPW1.value="";
+            inputPW2.value="";
+            inputPW1.focus(); 
+            return; 
+        }
+    });
+    inputName.addEventListener("blur",()=>validate(inputName,namePattern, "한글 2~4글자,영문자 2-10 첫글자는대문자 공백가능" ));
+    inputTel.addEventListener("blur",()=>validate(inputTel,telPattern, "전화번호형식이 안맞음" ));
+    inputEmail.addEventListener("blur",()=>validate(inputEmail,emailPattern, "이메일형식 안맞음" ));
+   
+    //폼 이벤트등록및 핸들러처리
+    myform.addEventListener("submit",(e)=>{
+        e.preventDefault();  //서버에 전송하는 기본기능막는다.
+        validate(inputPW1,pwdPattern, "영문자와 숫자, _ 6~10" );
+        validate(inputPW2,pwdPattern, "영문자와 숫자, _ 6~10" );
+        if(inputPW1.value !== inputPW2.value){
+            inputPW2.nextSibling.textContent ="패스워드가 일치하지 않음";
+            inputPW2.nextSibling.style.color ="red";
+            inputPW1.value="";
+            inputPW2.value="";
+            inputPW1.focus(); 
+            return; 
+        }
+        validate(inputName,namePattern, "한글 2~4글자,영문자 2-10 첫글자는대문자 공백가능" );
+        validate(inputTel,telPattern, "전화번호형식이 안맞음" );
+        validate(inputEmail,emailPattern, "이메일형식 안맞음" );
+        if(zipcode.value === "" ||  addr1.value  === ""){
+            zipcode.nextSibling.textContent ="주소선택해주세요";
+            zipcode.focus();
+            return;  
+        }
+        myform.submit();  
+    });
+    //핸들러처리기능    
+    function validate(userInput, pattern, message ){
+        if(userInput.value.match(pattern)){
+            userInput.nextSibling.innerHTML = "성공";
+            userInput.nextSibling.style.color ="blue";
+           }else{
+            userInput.nextSibling.innerHTML = message;
+            userInput.nextSibling.style.color ="red";
+            userInput.value = "";
+            userInput.focus();
+            return; 
+           }
+    }
+}
 }
 
