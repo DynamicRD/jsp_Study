@@ -1,4 +1,4 @@
-package co.kh.dev.memberone.model;
+package co.kh.dev.boardone.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,22 +13,28 @@ import javax.sql.DataSource;
 import co.kh.dev.common.ConnectionPool;
 import co.kh.dev.common.DBUtility;
 
-public class StudentDAO {
-	private final String SELECT_SQL = "SELECT * FROM Student";
-	private final String SELECT_ONE_SQL = "SELECT * FROM Student WHERE ID = ?";
-	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Student WHERE ID = ?";
-	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM Student WHERE ID = ?";
-	private final String INSERT_SQL = "insert into student values(?,?,?,?,?,?,?,?,?,?)";
-	private final String DELETE_SQL = "DELETE FROM Student WHERE ID = ?";
-	private final String UPDATE_SQL = "update student set pass=?, phone1=?, phone2=?, phone3=?, email=?, zipcode=?,address1=?, address2=? where id=?";
+//역전주입 : 스프링부트가 자동으로 생성해서 객체를 주입한다.
+//@Repository("bdao")
+public class BoardDAO {
+	private final String SELECT_SQL = "SELECT * FROM Board";
+	private final String SELECT_ONE_SQL = "SELECT * FROM Board WHERE ID = ?";
+	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Board WHERE ID = ?";
+	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM Board WHERE ID = ?";
+	private final String INSERT_SQL = "insert into Board values(?,?,?,?,?,?,?,?,?,?)";
+	private final String DELETE_SQL = "DELETE FROM Board WHERE ID = ?";
+	private final String UPDATE_SQL = "update Board set pass=?, phone1=?, phone2=?, phone3=?, email=?, zipcode=?,address1=?, address2=? where id=?";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
+	
+	
+	
+	
 	// 전체를 DB에서 출력
-	public ArrayList<StudentVO> selectDB() {
+	/*public ArrayList<BoardVO> selectDB() {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<StudentVO> tmList = new ArrayList<StudentVO>();
+		ArrayList<BoardVO> tmList = new ArrayList<BoardVO>();
 		try {
 			pstmt = con.prepareStatement(SELECT_SQL);
 			rs = pstmt.executeQuery();
@@ -43,8 +49,8 @@ public class StudentDAO {
 				String zipcode 	= rs.getString("zipcode");
 				String address 	= rs.getString("address");
 				String job 		= rs.getString("job");
-				StudentVO tmvo = 
-						new StudentVO(id, passwd, name, memNum1, memNum2, eMail, phone, zipcode, address, job);
+				BoardVO tmvo = 
+						new BoardVO(id, passwd, name, memNum1, memNum2, eMail, phone, zipcode, address, job);
 				tmList.add(tmvo);
 			}
 		} catch (SQLException e) {
@@ -55,12 +61,12 @@ public class StudentDAO {
 		return tmList;
 	}
 	
-	public StudentVO selectOneDB(StudentVO svo) {
+	public BoardVO selectOneDB(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		StudentVO resultVO =null;
+		BoardVO resultVO =null;
 		try {
 			pstmt = con.prepareStatement(SELECT_ONE_SQL);
 			pstmt.setString(1, svo.getId());
@@ -76,7 +82,7 @@ public class StudentDAO {
 				String zipcode 	= rs.getString("zipcode");
 				String address1 = rs.getString("address1");
 				String address2	= rs.getString("address2");
-				resultVO = new StudentVO(id, pass, name, phone1, phone2, phone3, eMail, zipcode, address1, address2);
+				resultVO = new BoardVO(id, pass, name, phone1, phone2, phone3, eMail, zipcode, address1, address2);
 		} 
 			}catch (SQLException e) {
 			e.printStackTrace();
@@ -87,7 +93,7 @@ public class StudentDAO {
 	}
 	
 
-	public boolean selectIdCheck(StudentVO svo) {
+	public boolean selectIdCheck(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -135,7 +141,7 @@ public class StudentDAO {
 		return zipList;
 	}
 
-	public Boolean insertDB(StudentVO svo) {
+	public Boolean insertDB(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -161,7 +167,7 @@ public class StudentDAO {
 		return (count>0)?true:false;
 	}
 	
-	public Boolean updateDB(StudentVO svo) {
+	public Boolean updateDB(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -186,7 +192,7 @@ public class StudentDAO {
 		return (count>0)?true:false;
 	}
 
-	public Boolean deleteDB(StudentVO svo) {
+	public Boolean deleteDB(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -203,7 +209,7 @@ public class StudentDAO {
 		return (count>0)?true:false;
 	}
 	
-	public int selectLoginCheck(StudentVO svo) {
+	public int selectLoginCheck(BoardVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -225,6 +231,6 @@ public class StudentDAO {
 		}
 		return check;
 	}
-	
+	*/
 	
 }

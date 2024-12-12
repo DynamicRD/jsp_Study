@@ -1,3 +1,4 @@
+<%@page import="co.kh.dev.homepageproject.model.MemberDAO"%>
 <%@page import="co.kh.dev.homepageproject.model.MemberVO"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 
@@ -18,7 +19,7 @@ if (id != null && pass != null) {
 	MemberVO mvo = new MemberVO(id,pass);
 	MemberDAO ld = new MemberDAO();
 	// 2. selectLogin 메서드를 호출하여 로그인 정보 확인
-	LoginVO rlvo = ld.selectLogin(lvo);
+	MemberVO rlvo = ld.selectLogin(mvo);
 	successFlag = rlvo.isSuccessFlag();
 	
 	// 3. 로그인 성공 시 세션을 생성하여 사용자 정보 저장

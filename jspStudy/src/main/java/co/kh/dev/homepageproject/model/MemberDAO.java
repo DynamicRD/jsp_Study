@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 
 import co.kh.dev.common.ConnectionPool;
-<<<<<<< HEAD
 import co.kh.dev.common.DBUtility;
 import co.kh.dev.login.model.LoginVO;
 import co.kh.dev.memberone.model.ZipCodeVO;
@@ -21,14 +20,6 @@ public class MemberDAO {
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
 	private final String LOGIN_UPDATE = "update member set pass = ? where id = ?";
 	
-=======
-import co.kh.dev.memberone.model.ZipCodeVO;
-
-public class MemberDAO {
-	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Member WHERE ID = ?";
-	private final String INSERT_SQL = "insert into Member values(?,?,?,?,?,?,?,?)";
-	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
->>>>>>> 32e669fd1c705337160b3371263b806a371327dd
 	// 전체를 DB에서 출력
 
 
@@ -103,7 +94,6 @@ public class MemberDAO {
 		}
 		return (count>0)?true:false;
 	}
-<<<<<<< HEAD
 
 	public MemberVO selectLogin(MemberVO mvo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
@@ -154,6 +144,4 @@ public class MemberDAO {
 		return successFlag;
 	}
 
-=======
->>>>>>> 32e669fd1c705337160b3371263b806a371327dd
 }

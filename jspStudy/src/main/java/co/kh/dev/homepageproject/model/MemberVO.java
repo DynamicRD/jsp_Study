@@ -9,7 +9,6 @@ public class MemberVO {
 	private String zipcode;
 	private String address1;
 	private String address2;
-<<<<<<< HEAD
 	private boolean successFlag;
 	
 	public boolean isSuccessFlag() {
@@ -18,8 +17,6 @@ public class MemberVO {
 	public void setSuccessFlag(boolean successFlag) {
 		this.successFlag = successFlag;
 	}
-=======
->>>>>>> 32e669fd1c705337160b3371263b806a371327dd
 	public MemberVO() {
 		super();
 	}

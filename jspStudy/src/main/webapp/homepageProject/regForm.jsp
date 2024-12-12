@@ -1,14 +1,11 @@
 <%@page contentType="text/html; charset=UTF-8"%>
-<%
-	boolean successFlag = false;
-%>
-<html>
+<!-- <html>
 <head>
 <title>Register Form</title>
 <link href="css/regform.css" rel="stylesheet" type="text/css" />
 <script language="javascript" src="js/regform.js"></script>
 </head>
-<body onload="inputCheck()";>
+<body > -->
 	<main>
 		<form method="post" action="regProc.jsp" name="regForm">
 			<table border="1">
@@ -61,10 +58,11 @@
 					<td colspan="2" align="center">
 						<input type="submit" value="회원가입"/>&nbsp;&nbsp; 
 						<input type="reset" value="다시입력" />
+						<input type="button" onclick="location.href = 'isRegformFalse.jsp'" value="뒤로가기"> 
 					</td>
 				</tr>
 			</table>
 		</form>
 	</main>
-</body>
-</html>
+<!-- </body>
+</html> -->

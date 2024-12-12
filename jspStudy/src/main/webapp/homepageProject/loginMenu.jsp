@@ -13,7 +13,7 @@
 			<br>
 		</table>
 	</div>
-	<input type="button" onclick="location.href = 'regForm.jsp'" value="회원가입"> 
+	<input type="button" onclick="location.href = 'isRegformTrue.jsp'" value="회원가입"> 
 	<input type="submit" value="로그인"> 
 	<input type="button" onclick="location.href = 'find_member.jsp'" value="아이디찾기">
 </form>

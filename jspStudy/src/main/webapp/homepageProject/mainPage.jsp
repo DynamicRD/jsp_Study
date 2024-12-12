@@ -7,10 +7,18 @@
 <title>Document</title>
 <link rel="stylesheet"  href="css/homepage.css" type="text/css">
 <script language="javascript" src="js/hompage.js"></script>
+<%if(session.getAttribute("loginFlag") != null) {%>
+<link rel="stylesheet"  href="css/regform.css" type="text/css">
+<script language="javascript" src="js/regform.js"></script>
+<%} %>
 <script src="https://kit.fontawesome.com/de7b35df6f.js" async
 	crossorigin="anonymous"></script>
 </head>
+<%if(session.getAttribute("loginFlag") == null) {%>
 <body onload="carousel();">
+<%}else{%>
+<body onload="carousel(); inputCheck();">
+<%}%>
 	<div class="header">
 		<p>
 			<i class="fa-solid fa-house"></i> 개인웹사이트
@@ -64,6 +72,8 @@
 			<div class="left2"></div>
 		</div>
 		<div class="center">
+			
+			<%if(session.getAttribute("loginFlag") == null){%>
 			게시판
 			<table class="maintable">
 				<tr>
@@ -92,21 +102,18 @@
 					<li><i class="fa-solid fa-angle-right"></i></li>
 				</ul>
 			</div>
-
+			<%}else{%>
+			<%@ include file="./regForm.jsp"%>
+			<%} %>
 		</div>
 		<div class="right">
 			로그인창
 			<div class="login">
-<<<<<<< HEAD
 			<% if(session.getAttribute("id") == null){ %>
 			<%@ include file="./loginMenu.jsp"%>
 			<%}else if(session != null){%>
 			<%@ include file="./loginComplete.jsp"%>
 			<%}%>		
-=======
-			<%@ include file="./loginMenu.jsp"%>
-				
->>>>>>> 32e669fd1c705337160b3371263b806a371327dd
 			</div>
 		</div>
 	</div>

@@ -6,8 +6,6 @@
     margin: 0px;
     padding: 0px;
 }
-body{
-}
 
 *{
     box-sizing: border-box;
@@ -20,6 +18,30 @@ body{
     background-color: bisque;
     text-align: center;
     flex-direction: column;
+}
+
+main{
+	width: 80%;
+	margin : 0 auto;
+	display : flex;
+	flex-direction: column;
+	flex-wrap : wrap;
+	justify-content: center;
+	align-content: center;
+}
+.login_table{
+	width: 600px;
+}
+TD {
+	FONT-SIZE: 9pt;
+	COLOR: black;
+	LINE-HEIGHT: 160%;
+}
+
+SELECT {
+	FONT-SIZE: 9pt;
+	COLOR: black;
+	LINE-HEIGHT: 160%;
 }
 
 
@@ -257,13 +279,4 @@ div.right{
     height: 300px;
 }
 
-/* regform css */
-main{
-	width: 80%;
-	margin : 0 auto;
-	display : flex;
-	flex-direction: column;
-	flex-wrap : wrap;
-	justify-content: center;
-	align-content: center;
-}
+
