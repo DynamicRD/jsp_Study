@@ -4,247 +4,345 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 
 import co.kh.dev.common.ConnectionPool;
-import co.kh.dev.common.DBUtility;
 
-//역전주입 : 스프링부트가 자동으로 생성해서 객체를 주입한다.
-//@Repository("bdao")
 public class BoardDAO {
-	//싱글톤 1번
+	// 싱글톤1
 	private static BoardDAO instance;
-	//싱글톤 2번
-	private BoardDAO() {}
-	//싱글톤 3번
+
+	// 싱글톤2
+	private BoardDAO() {
+	}
+
+	// 싱글톤3
 	public static BoardDAO getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			synchronized (BoardDAO.class) {
 				instance = new BoardDAO();
 			}
 		}
-		
 		return instance;
 	}
-	private final String SELECT_SQL = "SELECT * FROM Board";
-	private final String SELECT_ONE_SQL = "SELECT * FROM Board WHERE ID = ?";
-	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Board WHERE ID = ?";
-	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM Board WHERE ID = ?";
-	private final String INSERT_SQL = "insert into Board values(?,?,?,?,?,?,?,?,?,?)";
-	private final String DELETE_SQL = "DELETE FROM Board WHERE ID = ?";
-	private final String UPDATE_SQL = "update Board set pass=?, phone1=?, phone2=?, phone3=?, email=?, zipcode=?,address1=?, address2=? where id=?";
+
+	private final String SELECT_SQL = "select * from board order by num desc";
+	private final String SELECT_START_END_SQL = "select * from "
+			+ "(select rownum rnum, num, writer,email, subject, pass,regdate, readcount, ref, step, depth, content, ip) "
+			+ "from(select * from board order by ref desc, step asc)) where rnum >= ? and rnum<=?";
+	private final String SELECT_COUNT_SQL = "SELECT COUNT(*) AS COUNT FROM BOARD";
+	private final String SELECT_MAX_NUM_SQL = "select max(num) as NUM from board";
+	private final String SELECT_ONE_SQL = "select * from board where num = ?";
+	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from board where num = ? and pass = ?";
+	
+	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM STUDENT WHERE ID = ?";
+	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM STUDENT WHERE ID = ?";
+	private final String INSERT_SQL = "insert into board(num, writer, email, subject, pass,	"
+			+ "regdate, ref, step, depth, content, ip)	values(board_seq.nextval,?,?,?,?,?,?,?,?,?,?)";
+	private final String DELETE_SQL = "DELETE FROM BOARD WHERE NUM = ? and pass =?";
+	private final String UPDATE_SQL = "update board set writer= ?,email= ?,subject= ? ,content= ? where num = ?";
+	private final String UPDATE_STEP_SQL = "update board set step=step+1 where ref= ? and step > ?";
+	private final String UPDATE_READCOUNT_SQL = "update board set readcount = readcount+1 where num = ?";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
+
+	public Boolean insertDB(BoardVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+
+		// 현재 보드속에 가장최고값 + 1, 없으면 1
+		ResultSet rs = null;
+		int number = 0;
+		int step = 0;
+		int depth = 0;
+		int ref = 1;
+		int count = 0;
+
+		try {
+			pstmt = con.prepareStatement(SELECT_MAX_NUM_SQL);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				number = rs.getInt("NUM") + 1;
+			} else {
+				number = 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// getNum() 0 이면 새글, 0 이면 답변글이다.
+		try {
+			if (vo.getNum() != 0) {// 답변글일경우
+				pstmt = con.prepareStatement(UPDATE_STEP_SQL);
+				pstmt.setInt(1, vo.getRef());
+				pstmt.setInt(2, vo.getStep());
+				pstmt.executeUpdate();
+				ref = vo.getRef();
+				step = vo.getStep() + 1;
+				depth = vo.getDepth() + 1;
+			} else {// 새 글일 경우
+				ref = number; // 가장최고값 + 1
+				step = 0;
+				depth = 0;
+			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		//게시판 글 등록하기
+		try {
+			pstmt = con.prepareStatement(INSERT_SQL);
+			pstmt.setString(1, vo.getWriter());
+			pstmt.setString(2, vo.getEmail());
+			pstmt.setString(3, vo.getSubject());
+			pstmt.setString(4, vo.getPass());
+			pstmt.setTimestamp(5, vo.getRegdate());
+			pstmt.setInt(6, ref);
+			pstmt.setInt(7, step);
+			pstmt.setInt(8, depth);
+			pstmt.setString(9, vo.getContent());
+			pstmt.setString(10, vo.getIp());
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt);
+		}
+		return (count > 0) ? true : false;
+	}
 	
-	
-	
-	
-	// 전체를 DB에서 출력
-	/*public ArrayList<BoardVO> selectDB() {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
+	public int selectCountDB() {
+		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<BoardVO> tmList = new ArrayList<BoardVO>();
+		int count = 0; 
+		try {
+			pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				count = rs.getInt("COUNT");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return count;
+	}	
+	
+	public ArrayList<BoardVO> selectDB() {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<BoardVO> boardList = new ArrayList<BoardVO>();
 		try {
 			pstmt = con.prepareStatement(SELECT_SQL);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				String id 		= rs.getString("ID");
-				String passwd 	= rs.getString("passwd");
-				String name 	= rs.getString("name");
-				String memNum1 	= rs.getString("mem_Num1");
-				String memNum2 	= rs.getString("mem_Num2");
-				String eMail 	= rs.getString("E_MAIL");
-				String phone 	= rs.getString("phone");
-				String zipcode 	= rs.getString("zipcode");
-				String address 	= rs.getString("address");
-				String job 		= rs.getString("job");
-				BoardVO tmvo = 
-						new BoardVO(id, passwd, name, memNum1, memNum2, eMail, phone, zipcode, address, job);
-				tmList.add(tmvo);
+				int num 		= rs.getInt("num");
+				String writer 	= rs.getString("writer");
+				String email 	= rs.getString("email");
+				String subject 	= rs.getString("subject");
+				String pass 	= rs.getString("pass");
+				Timestamp regdate = rs.getTimestamp("regdate");
+				int readcount 	= rs.getInt("readcount");
+				int ref 		= rs.getInt("ref");
+				int step 		= rs.getInt("step");
+				int depth 		= rs.getInt("depth");
+				String content 	= rs.getString("content");
+				String ip 		= rs.getString("ip");
+				BoardVO vo 		= new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip); 
+				boardList.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
-		return tmList;
+		return boardList;
 	}
 	
-	public BoardVO selectOneDB(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
+	public BoardVO selectBoardDB(BoardVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		BoardVO resultVO =null;
+		BoardVO bvo = null; 
+		int count = 0; 
+		try {
+			//조회수 증가
+			pstmt = con.prepareStatement(UPDATE_READCOUNT_SQL);
+			pstmt.setInt(1, vo.getNum());
+			pstmt.executeUpdate();
+			
+			//num 내용가져오기
+			pstmt = con.prepareStatement(SELECT_ONE_SQL);
+			pstmt.setInt(1, vo.getNum());
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				int num 		= rs.getInt("num");
+				String writer 	= rs.getString("writer");
+				String email 	= rs.getString("email");
+				String subject 	= rs.getString("subject");
+				String pass 	= rs.getString("pass");
+				Timestamp regdate = rs.getTimestamp("regdate");
+				int readcount 	= rs.getInt("readcount");
+				int ref 		= rs.getInt("ref");
+				int step 		= rs.getInt("step");
+				int depth 		= rs.getInt("depth");
+				String content 	= rs.getString("content");
+				String ip 		= rs.getString("ip");
+				bvo 		= new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		System.out.println("bvo = "+bvo.toString());
+		return bvo;
+	}	
+	
+	public BoardVO selectBoardOneDB(BoardVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BoardVO bvo = null; 
+		int count = 0; 
 		try {
 			pstmt = con.prepareStatement(SELECT_ONE_SQL);
-			pstmt.setString(1, svo.getId());
+			pstmt.setInt(1, vo.getNum());
 			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				String id 		= rs.getString("ID");
+			if(rs.next()) {
+				int num 		= rs.getInt("num");
+				String writer 	= rs.getString("writer");
+				String email 	= rs.getString("email");
+				String subject 	= rs.getString("subject");
 				String pass 	= rs.getString("pass");
-				String name 	= rs.getString("name");
-				String phone1 	= rs.getString("phone1");
-				String phone2 	= rs.getString("phone2");
-				String phone3 	= rs.getString("phone3");
-				String eMail 	= rs.getString("email");
-				String zipcode 	= rs.getString("zipcode");
-				String address1 = rs.getString("address1");
-				String address2	= rs.getString("address2");
-				resultVO = new BoardVO(id, pass, name, phone1, phone2, phone3, eMail, zipcode, address1, address2);
-		} 
-			}catch (SQLException e) {
+				Timestamp regdate = rs.getTimestamp("regdate");
+				int readcount 	= rs.getInt("readcount");
+				int ref 		= rs.getInt("ref");
+				int step 		= rs.getInt("step");
+				int depth 		= rs.getInt("depth");
+				String content 	= rs.getString("content");
+				String ip 		= rs.getString("ip");
+				bvo 		= new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
-		return resultVO;
-	}
-	
+		System.out.println("bvo = "+bvo.toString());
+		return bvo;
+	}	
 
-	public boolean selectIdCheck(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
+	public int updateDB(BoardVO vo) {
+		//1: 성공, 2. 패스워드문제, 3 수정문제 
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; 
+		int passCheckCount = 0;
+		int count = 0;
+		int returnValue = 1;
+		
+		//패스워드가 맞는지 점검필요
+		try {
+			pstmt = con.prepareStatement(SELECT_PASS_ID_CHECK_SQL);
+			pstmt.setInt(1, vo.getNum());
+			pstmt.setString(2, vo.getPass());
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				passCheckCount = rs.getInt("COUNT");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(passCheckCount != 0) {
+			try {
+				pstmt = con.prepareStatement(UPDATE_SQL);
+				pstmt.setString(1, vo.getWriter());
+				pstmt.setString(2, vo.getEmail());
+				pstmt.setString(3, vo.getSubject());
+				pstmt.setString(4, vo.getContent());
+				pstmt.setInt(5, vo.getNum());
+				count = pstmt.executeUpdate();
+				if(count == 0) 
+					returnValue = 3;
+				else
+					returnValue = 1; 
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				cp.dbClose(con, pstmt);
+			}
+		}else {
+			returnValue = 2;
+		}
+		return returnValue; 
+	}
+
+	public boolean deleteDB(BoardVO vo) {
+		//1: 성공, 2. 패스워드문제, 3 수정문제 
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null; 
+		int count = 0;
+			try {
+				pstmt = con.prepareStatement(DELETE_SQL);
+				pstmt.setInt(1, vo.getNum());
+				pstmt.setString(2, vo.getPass());
+				count = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				cp.dbClose(con, pstmt);
+			}
+			return count != 0 ? true : false;
+	}
+
+	public ArrayList<BoardVO> selectStartEndDB(int start,int end) {
+		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		int count = 0;
+		ArrayList<BoardVO> boardList = new ArrayList<BoardVO>(end-start+1);
 		try {
-			pstmt = con.prepareStatement(SELECT_BY_ID_SQL);
-			pstmt.setString(1, svo.getId());
+			pstmt = con.prepareStatement(SELECT_START_END_SQL);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				count = rs.getInt("count");
+				int num 		= rs.getInt("num");
+				String writer 	= rs.getString("writer");
+				String email 	= rs.getString("email");
+				String subject 	= rs.getString("subject");
+				String pass 	= rs.getString("pass");
+				Timestamp regdate = rs.getTimestamp("regdate");
+				int readcount 	= rs.getInt("readcount");
+				int ref 		= rs.getInt("ref");
+				int step 		= rs.getInt("step");
+				int depth 		= rs.getInt("depth");
+				String content 	= rs.getString("content");
+				String ip 		= rs.getString("ip");
+				BoardVO vo 		= new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip); 
+				boardList.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
-		return (count != 0 ) ? true : false;
+		return boardList;
 	}
-
-	public ArrayList<ZipCodeVO> selectZipCode(ZipCodeVO zvo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		ArrayList<ZipCodeVO> zipList = new ArrayList<ZipCodeVO>();
-		try {
-			pstmt = con.prepareStatement(SELECT_ZIP_SQL);
-			pstmt.setString(1, zvo.getDong() + "%");
-			rs = pstmt.executeQuery();
-			while(rs.next()){
-				String zipcode = rs.getString("zipcode");
-				String sido= rs.getString("sido");
-				String gugun= rs.getString("gugun");
-				String dong= rs.getString("dong");
-				String bunji= rs.getString("bunji");
-				ZipCodeVO obj = new ZipCodeVO(zipcode, sido, gugun, dong, bunji);
-				zipList.add(obj);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			cp.dbClose(con, pstmt, rs);
-		}
-		return zipList;
-	}
-
-	public Boolean insertDB(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null;
-		int count = 0;
-		try {
-			pstmt= con.prepareStatement(INSERT_SQL);
-			pstmt.setString(1,svo.getId());
-			 pstmt.setString(2,svo.getPass());
-			 pstmt.setString(3,svo.getName());
-			 pstmt.setString(4,svo.getPhone1());
-			 pstmt.setString(5,svo.getPhone2());
-			 pstmt.setString(6,svo.getPhone3());
-			 pstmt.setString(7,svo.getEmail());
-			 pstmt.setString(8,svo.getZipcode());
-			 pstmt.setString(9,svo.getAddress1());
-			 pstmt.setString(10,svo.getAddress2());
-			 count = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			cp.dbClose(con, pstmt);
-		}
-		return (count>0)?true:false;
-	}
-	
-	public Boolean updateDB(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null;
-		int count = 0;
-		try {
-			pstmt= con.prepareStatement(UPDATE_SQL);
-			pstmt.setString(1,svo.getPass());
-			pstmt.setString(2,svo.getPhone1());
-			pstmt.setString(3,svo.getPhone2());
-			pstmt.setString(4,svo.getPhone3());
-			pstmt.setString(5,svo.getEmail());
-			pstmt.setString(6,svo.getZipcode());
-			pstmt.setString(7,svo.getAddress1());
-			pstmt.setString(8,svo.getAddress2());
-			pstmt.setString(9,svo.getId());
-			count = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			cp.dbClose(con, pstmt);
-		}
-		return (count>0)?true:false;
-	}
-
-	public Boolean deleteDB(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null;
-		int count = 0;
-		try {
-			pstmt= con.prepareStatement(DELETE_SQL);
-			pstmt.setString(1,svo.getId());
-			count = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			cp.dbClose(con, pstmt);
-		}
-		return (count>0)?true:false;
-	}
-	
-	public int selectLoginCheck(BoardVO svo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String pass = null;
-		int check = -1;
-		try {
-			pstmt = con.prepareStatement(SELECT_LOGIN_SQL);
-			pstmt.setString(1, svo.getId());
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				pass = rs.getString("PASS");
-				check = (pass.equals(svo.getPass()) == true) ? 1:0;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			cp.dbClose(con, pstmt, rs);
-		}
-		return check;
-	}
-	*/
 	
 }
