@@ -1,6 +1,6 @@
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="co.kh.dev.boardone.model.BoardVO"%>
 <%@page import="co.kh.dev.boardone.model.BoardDAO"%>
+<%@page import="co.kh.dev.boardone.model.BoardVO"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ include file="view/color.jsp"%>
 <%

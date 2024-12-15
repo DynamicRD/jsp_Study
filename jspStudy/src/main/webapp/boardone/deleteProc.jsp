@@ -1,6 +1,6 @@
 <%@page import="co.kh.dev.boardone.model.BoardVO"%>
-<%@ page contentType="text/html; charset=UTF-8"%>
 <%@page import="co.kh.dev.boardone.model.BoardDAO"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import = "java.sql.Timestamp" %>
 <% 
 request.setCharacterEncoding("UTF-8");
