@@ -10,7 +10,7 @@ String id = request.getParameter("id");
 
 MemberVO mvo = new MemberVO();
 mvo.setId(id);
-MemberDAO mdao = new MemberDAO();
+MemberDAO mdao = MemberDAO.getInstance();
 boolean flag = mdao.selectIdCheck(mvo);
 %>
 

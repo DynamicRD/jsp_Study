@@ -10,6 +10,6 @@
 		</table>
 	</div>
 	<input type="button" onclick="location.href = 'logout.jsp'" value="로그아웃"> 
-	<input type="button" onclick="location.href = 'isMemberChange.jsp'" value="회원정보수정">
+	<input type="button" onclick="location.href = 'mainPage.jsp?flag=memberChange'" value="회원정보수정">
 	<input type="button" onclick="location.href = '#'" value="마이페이지">
 </form>

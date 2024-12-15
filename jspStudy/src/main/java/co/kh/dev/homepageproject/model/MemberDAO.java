@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
+import co.kh.dev.boardone.model.BoardDAO;
 import co.kh.dev.common.ConnectionPool;
 import co.kh.dev.common.DBUtility;
 import co.kh.dev.login.model.LoginVO;
@@ -14,13 +14,29 @@ import co.kh.dev.login.model.LoginVO;
 import co.kh.dev.memberone.model.ZipCodeVO;
 
 public class MemberDAO {
-	
+	// 싱글톤1
+		private static MemberDAO instance;
+
+		// 싱글톤2
+		private MemberDAO() {
+		}
+
+		// 싱글톤3
+		public static MemberDAO getInstance() {
+			if (instance == null) {
+				synchronized (MemberDAO.class) {
+					instance = new MemberDAO();
+				}
+			}
+			return instance;
+		}
+		
 	private final String SELECT_SQL = "SELECT * FROM Member";
 	private final String SELECT_ONE_SQL = "SELECT * FROM Member WHERE ID = ?";
 	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM Member WHERE ID = ?";
 	private final String INSERT_SQL = "insert into Member values(?,?,?,?,?,?,?,?)";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
-	private final String LOGIN_UPDATE = "update member set pass = ? where id = ?";
+	private final String MEMBER_UPDATE_SQL = "UPDATE member SET pass = ?, name = ?, phone = ?, email = ?, zipcode = ?, address1 = ?, address2 = ? WHERE id = ?";
 	
 	// 전체를 DB에서 출력
 
@@ -96,6 +112,32 @@ public class MemberDAO {
 		}
 		return (count>0)?true:false;
 	}
+	
+	//회원정보 변경
+	public Boolean memberChange(MemberVO mvo) {
+		ConnectionPool cp = ConnectionPool.getInstance(); 
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		int count = 0;
+		try {
+			pstmt= con.prepareStatement(MEMBER_UPDATE_SQL);
+			//System.out.println(mvo.toString());
+			pstmt.setString(1,mvo.getPass());
+			pstmt.setString(2,mvo.getName());
+			pstmt.setString(3,mvo.getPhone());
+			pstmt.setString(4,mvo.getEmail());
+			pstmt.setString(5,mvo.getZipcode());
+			pstmt.setString(6,mvo.getAddress1());
+			pstmt.setString(7,mvo.getAddress2());
+			pstmt.setString(8,mvo.getId());
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt);
+		}
+		return (count>0)?true:false;
+	}
 
 	public MemberVO selectLogin(MemberVO mvo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
@@ -104,6 +146,7 @@ public class MemberDAO {
 		PreparedStatement pstmt = null; // 오라클에서 작업할 쿼리문 사용할게 하는 명령문
 		boolean successFlag = false;
 		String name = null;
+		String email = null;
 		con = DBUtility.dbCon();
 		try {
 			pstmt = con.prepareStatement(SELECT_SQL);
@@ -112,6 +155,7 @@ public class MemberDAO {
 				String idCheck = rs.getString("ID");
 				String passCheck = rs.getString("PASS");
 				name = rs.getString("NAME");
+				email = rs.getString("email");
 				if (mvo.getId().equals(idCheck) && mvo.getPass().equals(passCheck)) {
 					successFlag = true;
 					break;
@@ -123,29 +167,11 @@ public class MemberDAO {
 			cp.dbClose(con, pstmt, rs);
 		}
 		mvo.setName(name);
+		mvo.setEmail(email);
 		mvo.setSuccessFlag(successFlag);
 		return mvo;
 	}
 	
-	public boolean changeLogin(MemberVO mvo) {
-		ConnectionPool cp = ConnectionPool.getInstance(); 
-		Connection con = cp.dbCon();
-		PreparedStatement pstmt = null; 
-		con = DBUtility.dbCon();
-		boolean successFlag = false;
-		try {
-			pstmt = con.prepareStatement(LOGIN_UPDATE);
-			pstmt.setString(1, mvo.getPass());
-			pstmt.setString(2, mvo.getId());
-			int count = pstmt.executeUpdate();
-			successFlag = (count != 0) ? (true) : (false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		cp.dbClose(con, pstmt);
-		return successFlag;
-	}
-
 	public MemberVO selectOneDB(MemberVO svo) {
 		ConnectionPool cp = ConnectionPool.getInstance(); 
 		Connection con = cp.dbCon();

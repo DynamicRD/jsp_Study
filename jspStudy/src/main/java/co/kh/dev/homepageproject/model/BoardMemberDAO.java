@@ -1,4 +1,4 @@
-package co.kh.dev.boardone.model;
+package co.kh.dev.homepageproject.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,43 +8,43 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import co.kh.dev.common.ConnectionPool;
 
-public class BoardDAO {
+public class BoardMemberDAO {
 	// 싱글톤방식
 	// 1. 객체
-	private static BoardDAO instance;
+	private static BoardMemberDAO instance;
 
 	// 2. 생성자
-	private BoardDAO() {
+	private BoardMemberDAO() {
 	};
 
 	// 3.
-	public static BoardDAO getInstance() {
+	public static BoardMemberDAO getInstance() {
 		if (instance == null) {
-			synchronized (BoardDAO.class) {
-				instance = new BoardDAO();
+			synchronized (BoardMemberDAO.class) {
+				instance = new BoardMemberDAO();
 			}
 		}
 		return instance;
 	}
 
-	private final String SELECT_SQL = "select * from board order by num desc";
+	private final String SELECT_SQL = "select * from BoardMember order by num desc";
 	private final String SELECT_START_END_SQL = " select * from "
 			+ "(select rownum AS rnum, num, writer, email, subject, pass, regdate, readcount, ref, step, depth, content, ip "
-			+ "from (select * from board order by ref desc, step asc)) where rnum>=? and rnum<=?";
-	private final String SELECT_COUNT_SQL = "select count(*) as count from board";
-	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from board";
-	private final String SELECT_ONE_SQL = "select * from board where num = ?";
-	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from board where num = ? and pass = ?";
+			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=?";
+	private final String SELECT_COUNT_SQL = "select count(*) as count from BoardMember";
+	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from BoardMember";
+	private final String SELECT_ONE_SQL = "select * from BoardMember where num = ?";
+	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from BoardMember where num = ? and pass = ?";
 	private final String SELECT_BY_ID_SQL = "SELECT COUNT(*) AS COUNT FROM STUDENT WHERE ID = ?";
 	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM STUDENT WHERE ID = ?";
-	private final String DELETE_SQL = "DELETE FROM BOARD WHERE NUM = ? AND PASS = ?";
-	private final String UPDATE_SQL = "update board set writer=?,email=?,subject=?,content=? where num=?";
-	private final String INSERT_SQL = "insert into board(num, writer, email, subject, pass, regdate, ref, step, depth, content, ip) values(board_seq.nextval,?,?,?,?,?,?,?,?,?,?)";
-	private final String UPDATE_STEP_SQL = "update board set step=step+1 where ref= ? and step > ?";
-	private final String UPDATE_READCOUNT_SQL = "update board set readcount=readcount+1 where num = ?";
+	private final String DELETE_SQL = "DELETE FROM BoardMember WHERE NUM = ? AND PASS = ?";
+	private final String UPDATE_SQL = "update BoardMember set writer=?,email=?,subject=?,content=? where num=?";
+	private final String INSERT_SQL = "insert into BoardMember(num, writer, email, subject, pass, regdate, ref, step, depth, content, ip) values(BoardMember_seq.nextval,?,?,?,?,?,?,?,?,?,?)";
+	private final String UPDATE_STEP_SQL = "update BoardMember set step=step+1 where ref= ? and step > ?";
+	private final String UPDATE_READCOUNT_SQL = "update BoardMember set readcount=readcount+1 where num = ?";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
 
-	public Boolean insertDB(BoardVO vo) {
+	public Boolean insertDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
@@ -130,12 +130,12 @@ public class BoardDAO {
 		return count;
 	}
 
-	public ArrayList<BoardVO> selectDB() {
+	public ArrayList<BoardMemberVO> selectDB() {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<BoardVO> boardList = new ArrayList<BoardVO>();
+		ArrayList<BoardMemberVO> BoardMemberList = new ArrayList<BoardMemberVO>();
 		try {
 			pstmt = con.prepareStatement(SELECT_SQL);
 			rs = pstmt.executeQuery();
@@ -152,24 +152,24 @@ public class BoardDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				BoardVO vo = new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
+				BoardMemberVO vo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
 						content, ip);
-				boardList.add(vo);
+				BoardMemberList.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
-		return boardList;
+		return BoardMemberList;
 	}
 
-	public BoardVO selectBoardDB(BoardVO vo) {
+	public BoardMemberVO selectBoardMemberDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		BoardVO bvo = null;
+		BoardMemberVO bvo = null;
 		int count = 0;
 		try {
 			// 조회수 증가
@@ -195,7 +195,7 @@ public class BoardDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -205,12 +205,12 @@ public class BoardDAO {
 		return bvo;
 	}
 
-	public BoardVO selectBoardOneDB(BoardVO vo) {
+	public BoardMemberVO selectBoardMemberOneDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		BoardVO bvo = null;
+		BoardMemberVO bvo = null;
 		int count = 0;
 		try {
 			// 글 전체내용 조회
@@ -230,7 +230,7 @@ public class BoardDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -241,12 +241,12 @@ public class BoardDAO {
 	}
 
 	
-	public ArrayList<BoardVO> selectStartEndDB(int start, int end) {
+	public ArrayList<BoardMemberVO> selectStartEndDB(int start, int end) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<BoardVO> boardList = new ArrayList<BoardVO>(end-start+1);	//arrayList갯수정해줌
+		ArrayList<BoardMemberVO> BoardMemberList = new ArrayList<BoardMemberVO>(end-start+1);	//arrayList갯수정해줌
 		try {
 			pstmt = con.prepareStatement(SELECT_START_END_SQL);
 			pstmt.setInt(1, start);
@@ -265,19 +265,19 @@ public class BoardDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				BoardVO vo = new BoardVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
+				BoardMemberVO vo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
 						content, ip);
-				boardList.add(vo);
+				BoardMemberList.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
-		return boardList;
+		return BoardMemberList;
 	}
 	
-	public int updateDB(BoardVO vo) {
+	public int updateDB(BoardMemberVO vo) {
 		// 1: 성공, 2. 패스워드문제, 3 수정문제
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
@@ -326,7 +326,7 @@ public class BoardDAO {
 	}
 	
 	
-	public boolean deleteDB(BoardVO vo) {
+	public boolean deleteDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;

@@ -1,5 +1,5 @@
-<%@page import="co.kh.dev.boardone.model.BoardVO"%>
-<%@page import="co.kh.dev.boardone.model.BoardDAO"%>
+<%@page import="co.kh.dev.homepageproject.model.BoardMemberVO"%>
+<%@page import="co.kh.dev.homepageproject.model.BoardMemberDAO"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%
 request.setCharacterEncoding("utf-8");
@@ -8,14 +8,14 @@ String pageNum = request.getParameter("pageNum");
 String pass = request.getParameter("pass");
 %>
 <% 
-BoardDAO bdao = BoardDAO.getInstance();
-BoardVO vo = new BoardVO();
+BoardMemberDAO bdao = BoardMemberDAO.getInstance();
+BoardMemberVO vo = new BoardMemberVO();
 vo.setNum(num);
 vo.setPass(pass);
 boolean check = bdao.deleteDB(vo);
 if (check) {
 %>
-<meta http-equiv="Refresh" content="0;url=list.jsp?pageNum=<%=pageNum%>">
+<meta http-equiv="Refresh" content="0;url=mainPage.jsp?pageNum=<%=pageNum%>">
 <%
 } else {
 %>

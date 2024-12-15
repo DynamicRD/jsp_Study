@@ -13,6 +13,7 @@ public class StudentVO {
 	private String address2;
 	public StudentVO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 	public StudentVO(String id, String pass, String name, String phone1, String phone2, String phone3, String email,
 			String zipcode, String address1, String address2) {
@@ -87,12 +88,6 @@ public class StudentVO {
 	}
 	public void setAddress2(String address2) {
 		this.address2 = address2;
-	}
-	@Override
-	public String toString() {
-		return "StudentVO [id=" + id + ", pass=" + pass + ", name=" + name + ", phone1=" + phone1 + ", phone2=" + phone2
-				+ ", phone3=" + phone3 + ", email=" + email + ", zipcode=" + zipcode + ", address1=" + address1
-				+ ", address2=" + address2 + "]";
 	}
 	
 }

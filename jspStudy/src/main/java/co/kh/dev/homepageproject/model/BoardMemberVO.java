@@ -1,8 +1,8 @@
-package co.kh.dev.boardone.model;
+package co.kh.dev.homepageproject.model;
 
 import java.sql.Timestamp;
 
-public class BoardVO {
+public class BoardMemberVO {
 	private int num;
 	private String writer;
 	private String email;
@@ -16,12 +16,12 @@ public class BoardVO {
 	private String content;
 	private String ip;
 
-	public BoardVO() {
+	public BoardMemberVO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public BoardVO(int num, String writer, String email, String subject, String pass, int readcount, int ref, int step,
+	public BoardMemberVO(int num, String writer, String email, String subject, String pass, int readcount, int ref, int step,
 			int depth, Timestamp regdate, String content, String ip) {
 		super();
 		this.num = num;

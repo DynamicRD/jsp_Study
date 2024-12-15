@@ -37,6 +37,18 @@ public class MemberVO {
 		this.address1 = address1;
 		this.address2 = address2;
 	}
+	
+	public MemberVO(String pass, String name, String phone, String email, String zipcode, String address1,
+			String address2) {
+		super();
+		this.pass = pass;
+		this.name = name;
+		this.phone = phone;
+		this.email = email;
+		this.zipcode = zipcode;
+		this.address1 = address1;
+		this.address2 = address2;
+	}
 	public String getId() {
 		return id;
 	}

@@ -1,4 +1,4 @@
-<%@page import="co.kh.dev.boardone.model.BoardDAO"%>
+<%@page import="co.kh.dev.homepageproject.model.BoardMemberDAO"%>
 <%@page import="java.sql.Timestamp"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <!-- 1. 사용자정보를 가져온다. -->
@@ -6,17 +6,17 @@
 request.setCharacterEncoding("UTF-8");
 %>
 <jsp:useBean id="vo" scope="page"
-	class="co.kh.dev.boardone.model.BoardVO">
+	class="co.kh.dev.homepageproject.model.BoardMemberVO">
 	<jsp:setProperty name="vo" property="*" />
 </jsp:useBean>
 <!-- 2. curd -->
 <%
 vo.setRegdate(new Timestamp(System.currentTimeMillis()));
 vo.setIp(request.getRemoteAddr());
-BoardDAO bdao = BoardDAO.getInstance();
+BoardMemberDAO bdao = BoardMemberDAO.getInstance();
 boolean flag = bdao.insertDB(vo);
 if (flag == true) {
-	response.sendRedirect("list.jsp");
+	response.sendRedirect("mainPage.jsp");
 }else{
 %>
 <script>
@@ -26,13 +26,3 @@ if (flag == true) {
 <%
 }
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>

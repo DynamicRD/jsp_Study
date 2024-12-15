@@ -9,6 +9,7 @@
 request.setCharacterEncoding("UTF-8");
 String id = request.getParameter("id");
 String pass = request.getParameter("pass");
+String email = null;
 String name = null;
 
 boolean successFlag = false;
@@ -17,7 +18,7 @@ String message = null;
 if (id != null && pass != null) {
 	// 1. LoginVO 객체 생성
 	MemberVO mvo = new MemberVO(id,pass);
-	MemberDAO mdao = new MemberDAO();
+	MemberDAO mdao = MemberDAO.getInstance();
 	// 2. selectLogin 메서드를 호출하여 로그인 정보 확인
 	MemberVO rlvo = mdao.selectLogin(mvo);
 	successFlag = rlvo.isSuccessFlag();
@@ -26,8 +27,11 @@ if (id != null && pass != null) {
 	if (successFlag) {
 		session.setAttribute("id", id);
 		session.setAttribute("pass", pass);
+		session.setAttribute("email", email);
 		name = rlvo.getName();
+		email = rlvo.getEmail();
 		session.setAttribute("name", name);
+		session.setAttribute("email", email);
 		response.sendRedirect("mainPage.jsp");
 	}
 	else {

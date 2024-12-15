@@ -1,3 +1,4 @@
+/*패턴검색진행*/
 function writeSave() {
 	if (document.writeForm.writer.value == "") {
 		alert("작성자를 입력하십시요.");
@@ -21,8 +22,9 @@ function writeSave() {
 		return false;
 	}
 	return true;
-} 
+}  
 
+/* 삭제 패턴검색 진행해야함*/
 function deleteSave() {
 		if (document.delForm.pass.value == '') {
 			alert("비밀번호를 입력하십시요.");
@@ -30,4 +32,3 @@ function deleteSave() {
 			return false;
 		}
 	}
-	

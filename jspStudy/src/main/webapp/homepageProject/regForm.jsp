@@ -1,13 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8"%>
-<!-- <html>
-<head>
-<title>Register Form</title>
-<link href="css/regform.css" rel="stylesheet" type="text/css" />
-<script language="javascript" src="js/regform.js"></script>
-</head>
-<body > -->
-	<main>
-		<form method="post" action="regProc.jsp" name="regForm">
+	<main >
+		<form method="post" action="regProc.jsp" name="regForm" class="myform">
 			<table border="1">
 				<tr>
 					<td  class="login_table" colspan="2" align="center">회원 가입 정보 입력</td>
@@ -60,7 +53,7 @@
 					<td colspan="2" align="center">
 						<input type="submit" value="회원가입"/>&nbsp;&nbsp; 
 						<input type="reset" value="다시입력" />&nbsp;&nbsp;
-						<input type="button" onclick="location.href = 'isRegformFalse.jsp'" value="뒤로가기"> 
+						<input type="button" onclick="location.href = 'mainPage.jsp?flag=none'" value="뒤로가기"> 
 					</td>
 				</tr>
 			</table>

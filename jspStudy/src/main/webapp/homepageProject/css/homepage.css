@@ -242,6 +242,13 @@ div.center{
     margin: 0 auto;
     width: 50px;
 }
+
+.writeForm{
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+}
+
 /* 우측 */
 div.right{
     border: 1px solid black;

@@ -50,8 +50,7 @@ public class ZipCodeVO {
 	}
 	@Override
 	public String toString() {
-		return "[" + zipcode + " " + sido + " " + gugun + " " + dong + " "
-				+ bunji + "]";
+		return "[" + zipcode + " " + sido + " " + gugun + " " + dong + " "+ bunji + "]";
 	}
 	
 }

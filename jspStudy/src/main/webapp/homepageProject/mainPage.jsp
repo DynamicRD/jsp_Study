@@ -1,26 +1,29 @@
 <%@page contentType="text/html; charset=UTF-8"%>
+
+<% 
+	//메인페이지 가운데 페이지 전환플래그
+	String flag = request.getParameter("flag");
+	if(flag == null){
+		flag = "none";
+	}
+	String tableflag = request.getParameter("tableflag");
+	if(tableflag == null){
+		tableflag = "none";
+	}
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Document</title>
-<link rel="stylesheet"  href="css/homepage.css" type="text/css">
+<link rel="stylesheet" href="css/homepage.css" type="text/css"><link rel="stylesheet" href="css/regform.css" type="text/css">
 <script language="javascript" src="js/hompage.js"></script>
-<%if(session.getAttribute("loginFlag") != null || session.getAttribute("memberChangFlag") != null) {%>
-<link rel="stylesheet"  href="css/regform.css" type="text/css">
 <script language="javascript" src="js/regform.js"></script>
-<%} %>
 <script src="https://kit.fontawesome.com/de7b35df6f.js" async
 	crossorigin="anonymous"></script>
 </head>
-<%if(session.getAttribute("loginFlag") == null && session.getAttribute("memberChangFlag") == null) {%>
-<body onload="carousel();">
-<%}else if(session.getAttribute("loginFlag") != null){%>
-<body onload="carousel(); inputCheck();">
-<%}else if(session.getAttribute("memberChangFlag") != null){%>
-<body onload="carousel(); inputCheck2();">
-<%}%>
+<body onload="carousel(); inputCheck(); inputCheck2();">
 	<div class="header">
 		<p>
 			<i class="fa-solid fa-house"></i> 개인웹사이트
@@ -73,49 +76,44 @@
 			<div class="left1"></div>
 			<div class="left2"></div>
 		</div>
+		
+<!-- 		가운데 -->
 		<div class="center">
-			
-			<%if(session.getAttribute("loginFlag") == null && session.getAttribute("memberChangFlag") == null){%>
-			게시판
-			<table class="maintable">
-				<tr>
-					<th class="num">번호</th>
-					<th class="title">제목</th>
-					<th class="writer">글쓴이</th>
-					<th class="day">날짜</th>
-					<th class="comments">댓글</th>
-					<th class="recommend">추천</th>
-				</tr>
-				<!-- 반복 10회까지 -->
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
-			<div class="main_footer">
-				<ul>
-					<li><i class="fa-solid fa-angle-left"></i></li>
-					<!-- 10개까지 늘어난다 -->
-					<li><a href="#">1</a></li>
-					<li><i class="fa-solid fa-angle-right"></i></li>
-				</ul>
-			</div>
-			<%//회원가입화면을 메인에 띄운다
-				}else if(session.getAttribute("loginFlag") != null){
-			%>
+<% 
+		  	//회원가입 화면을 띄운다
+				if(flag.equals("regform")){
+%>
 			<%@ include file="./regForm.jsp"%>
-			<%//회원정보변경화면을 메인에 띄운다
-				}else if(session.getAttribute("memberChangFlag") != null){ 
-			%>
+<%			//회원정보변경화면을 메인에 띄운다
+				}else if(flag.equals("memberChange")){ 
+%>
 			<%@ include file="./memberChange.jsp"%>
-			<%//메인화면 변경 종료
-				} 
-			%>
+<%			//글목록 메인화면 
+				} else if(tableflag.equals("none")){
+%>
+			<%@ include file="./tableMenu.jsp"%>
+<%			//
+				} else if(tableflag.equals("write")){
+%>
+			<%@ include file="./writeForm.jsp"%>
+<%
+				} else if(tableflag.equals("select")){
+%>
+			<%@ include file="./content.jsp"%>
+<%
+				} else if(tableflag.equals("update")){
+%>
+			<%@ include file="./updateForm.jsp"%>
+<%
+				}  else if(tableflag.equals("delete")){
+%>
+			<%@ include file="./deleteForm.jsp"%>
+<%
+				}  
+%>
 		</div>
+		
+<!-- 		오른쪽 -->
 		<div class="right">
 			로그인창
 			<div class="login">

@@ -35,6 +35,7 @@ function sendAddress(zipcode, sido, gugun, dong, bunji) {
 	self.close();
 }
 
+/*회원가입창 패턴검색*/
 function inputCheck(){
     //패턴검색
     const idPattern = /^[\w]{3,}$/; //[\w]는 영문자, 숫자, _만 입력 가능 {3,} 3글자이상가능
@@ -116,6 +117,9 @@ function inputCheck(){
            }
     }
 		
+
+}
+
 function inputCheck2(){
     //패턴검색
     const pwdPattern =/^[\w]{6,10}$/; //영문자와 숫자, _ 6~10  
@@ -123,18 +127,19 @@ function inputCheck2(){
     const telPattern =/^[\d]{2,3}-[\d]{3,4}-[\d]{4}$/; //\d 숫자만가능
     const emailPattern =/^[a-z0-9_+.-]+@([a-z0-9-]+\.)+[a-z0-9]{2,4}$/;
     //객체찾기
-    const inputPW1 = document.querySelector("#input-pw1"); 
-    const inputPW2 = document.querySelector("#input-pw2"); 
-    const inputName = document.querySelector("#input-name"); 
-    const inputTel= document.querySelector("#input-tel"); 
-    const inputEmail= document.querySelector("#input-email"); 
+    const inputPW1 = document.querySelector("#input-pw12"); 
+    const inputPW2 = document.querySelector("#input-pw22"); 
+    const inputName = document.querySelector("#input-name2"); 
+    const inputTel= document.querySelector("#input-tel2"); 
+    const inputEmail= document.querySelector("#input-email2"); 
     //주소객체찾기
-    const zipcode= document.querySelector("#zipcode");
-    const addr1= document.querySelector("#addr1");
-    const addr2= document.querySelector("#addr2");
+    const zipcode= document.querySelector("#zipcode2");
+    const addr1= document.querySelector("#addr12");
+    const addr2= document.querySelector("#addr22");
     const btnSearchAddr= document.querySelector("#btn-searchAddr");
     //폼객체찾기
-    const myform= document.querySelector(".myform");
+    const myform= document.querySelector(".myform2");
+		//아이디 중복여부 확인
 
 
 		
@@ -191,6 +196,9 @@ function inputCheck2(){
             return; 
            }
     }
+		
+
 }
-}
+
+
 
