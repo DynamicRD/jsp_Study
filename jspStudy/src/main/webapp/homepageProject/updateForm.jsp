@@ -43,6 +43,7 @@ try {
 							rows="13" cols="40">
         <%=bvo.getContent()%></textarea></td>
 				</tr>
+				<%if(session.getAttribute("id")==null){ %>
 				<tr>
 					<td width="70" align="center">비밀번호</td>
 					<td align="left" width="330"><input type="password" size="8"
@@ -50,6 +51,11 @@ try {
 				</tr>
 				<tr>
 					<td colspan=2 align="center">
+				<%}else{ %>
+				<tr>
+					<td colspan=2 align="center">
+					<input type="hidden" size="8" name="pass" value=<%=session.getAttribute("pass")%>>
+				<%} %>
     				<input type="submit" value="글수정">
     				<input type="reset" value="다시작성">
 						<input type="button" value="목록보기" onclick="document.location.href='mainPage.jsp?pageNum=<%=pageNum%>'">

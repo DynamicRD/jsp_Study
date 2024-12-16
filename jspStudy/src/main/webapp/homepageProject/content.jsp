@@ -59,7 +59,7 @@ int depth=bvo.getDepth();
 				<% if (isNonMemberPost || (isMember && sessionId.equals(writer))) { %>
     				<input type="button" value="글수정" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=update'">
 						&nbsp;&nbsp;&nbsp;&nbsp; 
-						<input type="button" value="글삭제" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete'">
+						<input type="button" value="글삭제" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete&writer=<%=writer%>'">
 						&nbsp;&nbsp;&nbsp;&nbsp; <!-- 수정<1> --> 
 					<% } %>
 						
