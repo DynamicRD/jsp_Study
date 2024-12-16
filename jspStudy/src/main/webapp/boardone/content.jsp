@@ -7,6 +7,9 @@
 	request.setCharacterEncoding("UTF-8");
 	int num = Integer.parseInt(request.getParameter("num"));
 	String pageNum = request.getParameter("pageNum");
+	if(pageNum == null){
+		pageNum = "1";
+	}
 	BoardVO vo = new BoardVO();
 	vo.setNum(num);
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -61,7 +64,9 @@ int depth=bvo.getDepth();
 						&nbsp;&nbsp;&nbsp;&nbsp; 
 						<input type="button" value="글삭제"
 						onclick="document.location.href='deleteForm.jsp?num=<%=_num%>&pageNum=<%=pageNum%>'">
-						&nbsp;&nbsp;&nbsp;&nbsp; <!-- 수정<1> --> 
+						&nbsp;&nbsp;&nbsp;&nbsp; 
+						<input type="button" value="답글쓰기" onclick="document.location.href='writeForm.jsp?num=<%=num%>&ref=<%=ref%>&step=<%=step%>&depth=<%=depth%>'">
+				 		&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="button" value="글목록" onclick="document.location.href='list.jsp?pageNum=<%=pageNum%>'">
 
 					</td>

@@ -13,6 +13,9 @@ request.setCharacterEncoding("UTF-8");
 <%
 vo.setRegdate(new Timestamp(System.currentTimeMillis()));
 vo.setIp(request.getRemoteAddr());
+if(session.getAttribute("id")==null){
+	vo.setWriter(vo.getWriter()+"(비회원)");
+}
 BoardMemberDAO bdao = BoardMemberDAO.getInstance();
 boolean flag = bdao.insertDB(vo);
 if (flag == true) {

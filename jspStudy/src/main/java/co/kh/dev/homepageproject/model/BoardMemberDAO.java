@@ -29,20 +29,17 @@ public class BoardMemberDAO {
 
 	private final String SELECT_SQL = "select * from BoardMember order by num desc";
 	private final String SELECT_START_END_SQL = " select * from "
-			+ "(select rownum AS rnum, num, writer, email, subject, pass, regdate, readcount, ref, step, depth, content, ip "
+			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth, content, ip "
 			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=?";
 	private final String SELECT_COUNT_SQL = "select count(*) as count from BoardMember";
 	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from BoardMember";
 	private final String SELECT_ONE_SQL = "select * from BoardMember where num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from BoardMember where num = ? and pass = ?";
-	private final String SELECT_BY_ID_SQL = "SELECT COUNT(*) AS COUNT FROM STUDENT WHERE ID = ?";
-	private final String SELECT_LOGIN_SQL = "SELECT PASS FROM STUDENT WHERE ID = ?";
 	private final String DELETE_SQL = "DELETE FROM BoardMember WHERE NUM = ? AND PASS = ?";
-	private final String UPDATE_SQL = "update BoardMember set writer=?,email=?,subject=?,content=? where num=?";
-	private final String INSERT_SQL = "insert into BoardMember(num, writer, email, subject, pass, regdate, ref, step, depth, content, ip) values(BoardMember_seq.nextval,?,?,?,?,?,?,?,?,?,?)";
+	private final String UPDATE_SQL = "update BoardMember set writer=?,subject=?,content=? where num=?";
+	private final String INSERT_SQL = "insert into BoardMember(num, writer, subject, pass, regdate, ref, step, depth, content, ip) values(BoardMember_seq.nextval,?,?,?,?,?,?,?,?,?)";
 	private final String UPDATE_STEP_SQL = "update BoardMember set step=step+1 where ref= ? and step > ?";
 	private final String UPDATE_READCOUNT_SQL = "update BoardMember set readcount=readcount+1 where num = ?";
-	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
 
 	public Boolean insertDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
@@ -92,15 +89,14 @@ public class BoardMemberDAO {
 		try {
 			pstmt = con.prepareStatement(INSERT_SQL);
 			pstmt.setString(1, vo.getWriter());
-			pstmt.setString(2, vo.getEmail());
-			pstmt.setString(3, vo.getSubject());
-			pstmt.setString(4, vo.getPass());
-			pstmt.setTimestamp(5, vo.getRegdate());
-			pstmt.setInt(6, ref);
-			pstmt.setInt(7, step);
-			pstmt.setInt(8, depth);
-			pstmt.setString(9, vo.getContent());
-			pstmt.setString(10, vo.getIp());
+			pstmt.setString(2, vo.getSubject());
+			pstmt.setString(3, vo.getPass());
+			pstmt.setTimestamp(4, vo.getRegdate());
+			pstmt.setInt(5, ref);
+			pstmt.setInt(6, step);
+			pstmt.setInt(7, depth);
+			pstmt.setString(8, vo.getContent());
+			pstmt.setString(9, vo.getIp());
 			count = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -142,7 +138,6 @@ public class BoardMemberDAO {
 			while (rs.next()) {
 				int num = rs.getInt("num");
 				String writer = rs.getString("writer");
-				String email = rs.getString("email");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
 				Timestamp regdate = rs.getTimestamp("regdate");
@@ -152,7 +147,7 @@ public class BoardMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				BoardMemberVO vo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
+				BoardMemberVO vo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate,
 						content, ip);
 				BoardMemberList.add(vo);
 			}
@@ -185,7 +180,6 @@ public class BoardMemberDAO {
 			if (rs.next()) {
 				int num = rs.getInt("num");
 				String writer = rs.getString("writer");
-				String email = rs.getString("email");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
 				Timestamp regdate = rs.getTimestamp("regdate");
@@ -195,7 +189,7 @@ public class BoardMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -220,7 +214,6 @@ public class BoardMemberDAO {
 			if (rs.next()) {
 				int num = rs.getInt("num");
 				String writer = rs.getString("writer");
-				String email = rs.getString("email");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
 				Timestamp regdate = rs.getTimestamp("regdate");
@@ -230,7 +223,7 @@ public class BoardMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -255,7 +248,6 @@ public class BoardMemberDAO {
 			while (rs.next()) {
 				int num = rs.getInt("num");
 				String writer = rs.getString("writer");
-				String email = rs.getString("email");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
 				Timestamp regdate = rs.getTimestamp("regdate");
@@ -265,7 +257,7 @@ public class BoardMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				BoardMemberVO vo = new BoardMemberVO(num, writer, email, subject, pass, readcount, ref, step, depth, regdate,
+				BoardMemberVO vo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate,
 						content, ip);
 				BoardMemberList.add(vo);
 			}
@@ -305,10 +297,9 @@ public class BoardMemberDAO {
 			try {
 				pstmt = con.prepareStatement(UPDATE_SQL);
 				pstmt.setString(1, vo.getWriter());
-				pstmt.setString(2, vo.getEmail());
-				pstmt.setString(3, vo.getSubject());
-				pstmt.setString(4, vo.getContent());
-				pstmt.setInt(5, vo.getNum());
+				pstmt.setString(2, vo.getSubject());
+				pstmt.setString(3, vo.getContent());
+				pstmt.setInt(4, vo.getNum());
 				count = pstmt.executeUpdate();
 				if (count == 0)
 					returnValue = 3;

@@ -46,13 +46,23 @@ int depth=bvo.getDepth();
 				</tr>
 				<tr height="30">
 					<td colspan="4" align="right">
-					<input
-						type="button" value="글수정"
-						onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=update'">
+						<%
+    		String sessionId = (String) session.getAttribute("id");  // 회원 id
+    		String writer = bvo.getWriter();  // 글쓴이 이름
+    		boolean isMember = sessionId != null;  // 회원인지 확인
+
+    		// 글쓴이 이름에서 '(비회원)'이 포함되어 있는지 체크
+    		boolean isNonMemberPost = writer.endsWith("(비회원)");
+				%>
+
+				<%-- 수정 권한 체크 --%>
+				<% if (isNonMemberPost || (isMember && sessionId.equals(writer))) { %>
+    				<input type="button" value="글수정" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=update'">
 						&nbsp;&nbsp;&nbsp;&nbsp; 
-						<input type="button" value="글삭제"
-						onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete'">
+						<input type="button" value="글삭제" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete'">
 						&nbsp;&nbsp;&nbsp;&nbsp; <!-- 수정<1> --> 
+					<% } %>
+						
 						<input type="button" value="글목록" onclick="document.location.href='mainPage.jsp?pageNum=<%=pageNum%>'">
 
 					</td>

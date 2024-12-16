@@ -77,7 +77,7 @@ number = count - (currentPage - 1) * pageSize;
 				<td align="center" width="50"><%=number--%></td>
 				<td width="250">
 					<!-- 수정 <5> --> 
-					<a href="content.jsp?num=<%=article.getNum()%>&pageNum=1"> 
+					<a href="content.jsp?num=<%=article.getNum()%>&ppageNum=<%=currentPage%>"> 
 					<!-- 수정<6> -->
 					<%
 					//6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
@@ -105,14 +105,50 @@ number = count - (currentPage - 1) * pageSize;
 				<td align="center" width="50"><%=article.getReadcount()%></td>
 				<td align="center" width="100"><%=article.getIp()%></td>
 			</tr>
-			<%
+<%
 			}
-			%>
+%>
 		</table>
-		<%
+</main>
+<br>
+<%
 		}
-		%>
-		<!-- 수정 <7> -->
-	</main>
+%>
+<div  align="center">
+<%
+ 			if (count > 0) {
+ 			int pageBlock = 5;
+ 			int imsi = count % pageSize == 0 ? 0 : 1;
+ 			int pageCount = count / pageSize + imsi;
+ 			int startPage = (int)((currentPage-1)/pageBlock)*pageBlock + 1;
+ 			int endPage = startPage + pageBlock - 1;
+ 			if (endPage > pageCount) endPage = pageCount;
+ 			if (startPage > pageBlock) { 
+%>
+ 				<a href="list.jsp?pageNum=<%=startPage-pageBlock%>">[이전]</a>
+<%
+ 				}
+ 			for (int i = startPage ; i <= endPage ; i++) { 
+				if(currentPage == i){
+%>					
+ 				<a href="list.jsp?pageNum=<%= i %>">[[<%= i %>]]</a>
+<% 				
+				}else{
+%>					
+ 				<a href="list.jsp?pageNum=<%= i %>">[<%= i %>]</a>
+<% 				
+				}
+%>
+<%
+				}
+ 			if (endPage < pageCount) { %>
+ 				<a href="list.jsp?pageNum=<%=startPage+pageBlock%>">[다음]</a>
+<%
+ 				}
+ %>
+ <% 			
+		 }
+%>
+</div>
 </body>
 </html>

@@ -39,7 +39,7 @@ try {
 				<%} %>
 				</td>
 			</tr>
-			<tr>
+<%-- 	<tr>
 				<td width="70" align="center">이메일</td>
 				<td width="330"  align="left" >
 				<%if(session.getAttribute("id")!=null){%>
@@ -49,7 +49,7 @@ try {
 						<input type="text" size="30" maxlength="30" name="email" />
 				<%} %>		
 				</td>
-			</tr>
+			</tr>  --%>
 			<tr>
 				<td width="70" align="center">제목</td>
 				<td width="330">

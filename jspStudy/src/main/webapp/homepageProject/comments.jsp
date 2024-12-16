@@ -1,5 +1,5 @@
-<%@page import="co.kh.dev.homepageproject.model.BoardMemberDAO"%>
-<%@page import="co.kh.dev.homepageproject.model.BoardMemberVO"%>
+<%@page import="co.kh.dev.boardone.model.BoardDAO"%>
+<%@page import="co.kh.dev.boardone.model.BoardVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
@@ -22,13 +22,13 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 <%
 //4. 해당된 페이지 10개를 가져온다
 int number = 0;
-ArrayList<BoardMemberVO> BoardMemberList = null;
-BoardMemberDAO bdao = BoardMemberDAO.getInstance();
+ArrayList<BoardVO> boardList = null;
+BoardDAO bdao = BoardDAO.getInstance();
 
 int count = bdao.selectCountDB();//전체 글수
 if (count > 0) {
 	//현재페이지 내용 10개만 가져온다
-	BoardMemberList = bdao.selectStartEndDB(start, end);
+	boardList = bdao.selectStartEndDB(start, end);
 }
 //5. 만약 4페이지를 가져왔다면(31~40)을 가져왔따면 NUMBER = 40 전체객수 100 1페이지(100~91) 2페이지(90~81)
 number = count - (currentPage - 1) * pageSize;
@@ -37,23 +37,23 @@ number = count - (currentPage - 1) * pageSize;
 	<main>
 		<b>글목록(전체 글:<%=count%>)
 		</b>
-		<table width="800">
+		<table width="700">
 			<tr>
 				<td align="right"><a
-					href="mainPage.jsp?tableflag=write">글쓰기</a></td>
+					href="writeForm.jsp">글쓰기</a></td>
 			</tr>
 		</table>
 		<%
 		if (count == 0) {
 		%>
-		<table width="800" border="1" cellpadding="0" cellspacing="0">
+		<table width="700" border="1" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="center">게시판에 저장된 글이 없습니다.</td>
 		</table>
 		<%
 		} else {
 		%>
-		<table border="1" width="800" cellpadding="0" cellspacing="0"
+		<table border="1" width="700" cellpadding="0" cellspacing="0"
 			align="center">
 			<tr height="30">
 				<td align="center" width="50">번 호</td>
@@ -61,19 +61,17 @@ number = count - (currentPage - 1) * pageSize;
 				<td align="center" width="100">작성자</td>
 				<td align="center" width="150">작성일</td>
 				<td align="center" width="50">조 회</td>
-				<td align="center" width="50">댓 글</td>
 				<td align="center" width="100">IP</td>
 			</tr>
 			<%
-			for (BoardMemberVO article : BoardMemberList) {
+			for (BoardVO article : boardList) {
 				
 			%>
 			<tr height="30">
 				<td align="center" width="50"><%=number--%></td>
 				<td width="250">
 					<!-- 수정 <5> --> 
-					<%-- <a href="content.jsp">  --%>
-					<a href="mainPage.jsp?num=<%=article.getNum()%>&pageNum=1&tableflag=select"> 
+					<a href="content.jsp?num=<%=article.getNum()%>&ppageNum=<%=currentPage%>"> 
 					<!-- 수정<6> -->
 					<%
 					//6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
@@ -82,35 +80,34 @@ number = count - (currentPage - 1) * pageSize;
 					if (article.getDepth() > 0) {
 						wid = 5 * article.getDepth();
 					%>
-						<img src="img/level.gif" width="<%=wid%>" height="16">	<!-- 공백 -->
-  					<img src="img/re.gif">
+						<img src="images/level.gif" width="<%=wid%>" height="16">	<!-- 공백 -->
+  					<img src="images/re.gif">
 						<%
 					}
 						%>
 						<%=article.getSubject()%></a> 
 <%
  if (article.getReadcount() >= 20) {
- %> <img src="img/hot.gif" border="0" height="16"> 
+ %> <img src="images/hot.gif" border="0" height="16"> 
  <%
  }
  %>
 				</td>
-				<td align="center" width="100"><%=article.getWriter()%></td>
+				<td align="center" width="100"><a
+					href="mailto:<%=article.getEmail()%>"> <%=article.getWriter()%></a></td>
 				<td align="center" width="150"><%=sdf.format(article.getRegdate())%></td>
 				<td align="center" width="50"><%=article.getReadcount()%></td>
-				<td align="center" width="50"><%=article.getComments()%></td>
 				<td align="center" width="100"><%=article.getIp()%></td>
 			</tr>
-			<%
+<%
 			}
-			%>
+%>
 		</table>
-		<%
+</main>
+<br>
+<%
 		}
-		%>
-		<!-- 수정 <7> -->
-	</main>
-	<br>
+%>
 <div  align="center">
 <%
  			if (count > 0) {
@@ -122,24 +119,24 @@ number = count - (currentPage - 1) * pageSize;
  			if (endPage > pageCount) endPage = pageCount;
  			if (startPage > pageBlock) { 
 %>
- 				<a href="mainPage.jsp?pageNum=<%=startPage-pageBlock%>">[이전]</a>
+ 				<a href="list.jsp?pageNum=<%=startPage-pageBlock%>">[이전]</a>
 <%
  				}
  			for (int i = startPage ; i <= endPage ; i++) { 
 				if(currentPage == i){
 %>					
- 				<a href="mainPage.jsp?pageNum=<%= i %>">[[<%= i %>]]</a>
+ 				<a href="list.jsp?pageNum=<%= i %>">[[<%= i %>]]</a>
 <% 				
 				}else{
 %>					
- 				<a href="mainPage.jsp?pageNum=<%= i %>">[<%= i %>]</a>
+ 				<a href="list.jsp?pageNum=<%= i %>">[<%= i %>]</a>
 <% 				
 				}
 %>
 <%
 				}
  			if (endPage < pageCount) { %>
- 				<a href="mainPage.jsp?pageNum=<%=startPage+pageBlock%>">[다음]</a>
+ 				<a href="list.jsp?pageNum=<%=startPage+pageBlock%>">[다음]</a>
 <%
  				}
  %>

@@ -100,6 +100,7 @@
 				} else if(tableflag.equals("select")){
 %>
 			<%@ include file="./content.jsp"%>
+			<%-- <%@ include file="./comments.jsp"%> --%>
 <%
 				} else if(tableflag.equals("update")){
 %>

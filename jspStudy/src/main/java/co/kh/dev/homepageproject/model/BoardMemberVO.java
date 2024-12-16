@@ -5,28 +5,43 @@ import java.sql.Timestamp;
 public class BoardMemberVO {
 	private int num;
 	private String writer;
-	private String email;
 	private String subject;
 	private String pass;
 	private int readcount;
 	private int ref;
 	private int step;
 	private int depth;
+	private int comments;
 	private Timestamp regdate;
 	private String content;
 	private String ip;
 
 	public BoardMemberVO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public BoardMemberVO(int num, String writer, String email, String subject, String pass, int readcount, int ref, int step,
+	public BoardMemberVO(int num, String writer, String subject, String pass, int readcount, int ref,
+			int step, int depth, int comments, Timestamp regdate, String content, String ip) {
+		super();
+		this.num = num;
+		this.writer = writer;
+		this.subject = subject;
+		this.pass = pass;
+		this.readcount = readcount;
+		this.ref = ref;
+		this.step = step;
+		this.depth = depth;
+		this.comments = comments;
+		this.regdate = regdate;
+		this.content = content;
+		this.ip = ip;
+	}
+
+	public BoardMemberVO(int num, String writer, String subject, String pass, int readcount, int ref, int step,
 			int depth, Timestamp regdate, String content, String ip) {
 		super();
 		this.num = num;
 		this.writer = writer;
-		this.email = email;
 		this.subject = subject;
 		this.pass = pass;
 		this.readcount = readcount;
@@ -36,6 +51,14 @@ public class BoardMemberVO {
 		this.regdate = regdate;
 		this.content = content;
 		this.ip = ip;
+	}
+
+	public int getComments() {
+		return comments;
+	}
+
+	public void setComments(int comments) {
+		this.comments = comments;
 	}
 
 	public int getNum() {
@@ -52,14 +75,6 @@ public class BoardMemberVO {
 
 	public void setWriter(String writer) {
 		this.writer = writer;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getSubject() {
@@ -136,7 +151,7 @@ public class BoardMemberVO {
 
 	@Override
 	public String toString() {
-		return "BoardVO [num=" + num + ", writer=" + writer + ", email=" + email + ", subject=" + subject + ", pass="
+		return "BoardVO [num=" + num + ", writer=" + writer + ", subject=" + subject + ", pass="
 				+ pass + ", readcount=" + readcount + ", ref=" + ref + ", step=" + step + ", depth=" + depth
 				+ ", content=" + content + ", ip=" + ip + "]";
 	}

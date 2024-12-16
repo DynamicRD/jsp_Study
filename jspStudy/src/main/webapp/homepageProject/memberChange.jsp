@@ -11,7 +11,7 @@ mvo = mdao.selectOneDB(mvo);
 %>
 
 <main>
-		<form method="post" action="memberChangeDB.jsp" name="regForm" class="myform2" onsubmit="return checkForm2()">
+		<form method="post" action="memberChangeProc.jsp" name="regForm" class="myform2" onsubmit="return checkForm2()">
 			<input type="hidden" name="id" value="<%=id %>" />
 			<table border="1">
 				<tr>
