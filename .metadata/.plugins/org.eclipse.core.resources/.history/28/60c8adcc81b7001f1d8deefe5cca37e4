@@ -1,0 +1,22 @@
+<%@page import="co.kh.dev.memberone.model.StudentDAO"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!-- 1.사용자 정보를 가져온다 -->
+<!-- 2.curd 한다 -->
+<!-- 3.화면출력한다 -->
+<% 
+	request.setCharacterEncoding("utf-8");
+	StudentDAO sdao = new StudentDAO();
+%>
+<jsp:useBean id="dao" class="memberone.StudentDAO"/>
+<jsp:useBean id="vo" class="memberone.StudentVO" />
+<jsp:setProperty name="vo" property="*" />
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+<%@ page  contentType="text/html; charset=UTF-8"%>
+<%
+session.setAttribute("loginFlag", false); %>
+<script>
+	window.location.href = 'mainPage.jsp';
+</script>

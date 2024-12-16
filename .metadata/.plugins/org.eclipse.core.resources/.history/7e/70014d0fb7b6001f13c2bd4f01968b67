@@ -1,0 +1,36 @@
+package co.kh.dev.common;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+
+public final class ConnectionPool {
+	// 1. Oracle Driver를 정적처리해서 로드한다
+	static {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 2. 멤버변수
+	private ArrayList<Connection> free;
+	private ArrayList<Connection> used; // 사용중인 커넥션을 저장하는 변수 private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	private int initialCons = 10; // 최초로 초기 커넥션수
+	private int maxCons = 20; // 최대 커넥션수
+	private int numCons = 0; // 총 Connection 수
+	/*
+	 * private String user = "hr"; private String password = "hr";
+	 */
+	// 3. 싱글톤(자기참조 멤버변수,생성자함수,자기참조멤버변수 겟터)
+	private static ConnectionPool cp;
+	
+	public static ConnectionPool getInstance() {
+		if(cp == null) {
+			cp = new ConnectionPool();
+		}
+		return cp;
+	}
+
+	
+}

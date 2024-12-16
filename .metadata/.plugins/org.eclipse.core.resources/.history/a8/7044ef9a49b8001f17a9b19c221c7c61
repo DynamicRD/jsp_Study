@@ -1,0 +1,5 @@
+package co.kh.dev.boardone.model;
+
+public class BoardVO {
+
+}

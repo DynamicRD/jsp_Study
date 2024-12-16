@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.apache.catalina.filters.ExpiresFilter.XHttpServletResponse"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+    <fullyQualifiedTypeName name="co.kh.dev.login.LoginMemberServlet"/>
+    <fullyQualifiedTypeName name="co.kh.dev.login.LoginMemberDBServlet"/>
+    <fullyQualifiedTypeName name="co.kh.dev.login.model.LoginVO"/>
+    <fullyQualifiedTypeName name="co.kh.dev.tempmember.model.TempMemberVO"/>
+    <fullyQualifiedTypeName name="oracle.jdbc.driver.DMSFactory.Context"/>
+    <fullyQualifiedTypeName name="javax.naming.InitialContext"/>
+    <fullyQualifiedTypeName name="javax.naming.Context"/>
+    <fullyQualifiedTypeName name="javax.sql.DataSource"/>
+    <fullyQualifiedTypeName name="co.kh.dev.common.DBUtility"/>
+    <fullyQualifiedTypeName name="co.kh.dev.common.ConnectionPool"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="co.kh.dev.memberone.model.ZipCodeVO"/>
+    <fullyQualifiedTypeName name="co.kh.dev.memberone.model.StudentVO"/>
+    <fullyQualifiedTypeName name="java.sql.Timestamp"/>
+    <fullyQualifiedTypeName name="co.kh.dev.boardone.model.BoardVO"/>
+</qualifiedTypeNameHistroy>

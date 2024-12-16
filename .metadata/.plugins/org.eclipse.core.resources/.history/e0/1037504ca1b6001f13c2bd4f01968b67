@@ -1,0 +1,5 @@
+package co.kh.dev.tempmember.model;
+
+public class TempMemberVO {
+
+}

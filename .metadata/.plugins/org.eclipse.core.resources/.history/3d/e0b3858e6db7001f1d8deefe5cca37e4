@@ -1,0 +1,16 @@
+function idCheck(id) {
+	let value = document.regForm.id.value;
+	if (value === "") {
+		alert("아이디를 입력해 주세요.");
+		document.regForm.id.focus();
+	} else {
+		alert("아이디를 입력하셨습니다.");
+		url = "idCheck.jsp?id=" + value;
+		window.open(url, "post", "width=500,height=300");
+	}
+}
+
+function zipCheck() {
+	url = "zipCheck.jsp?check=y";
+	window.open(url, "post", "toolbar=no ,width=600 ,height=300 , directories=no,status=yes,scrollbars=yes,menubar=no");
+}
