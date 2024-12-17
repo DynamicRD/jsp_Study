@@ -28,16 +28,16 @@ public class CommentMemberDAO {
 	}
 
 	private final String SELECT_SQL = "select * from CommentMember order by num desc";
-	private final String SELECT_START_END_SQL = " select * from "
-			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth, content, ip "
-			+ "from (select * from CommentMember order by ref desc, step asc)) where rnum>=? and rnum<=?";
-	private final String SELECT_COUNT_SQL = "select count(*) as count from CommentMember";
-	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from CommentMember";
+	private final String SELECT_START_END_BNUM_SQL = " select * from "
+			+ "(select rownum AS rnum, num,b_num, writer, subject, pass, regdate, readcount, ref, step, depth, content, ip "
+			+ "from (select * from CommentMember order by ref desc, step asc)) where rnum>=? and rnum<=? and b_num = ?";
+	private final String SELECT_COUNT_BNUM_SQL = "select count(*) as count from CommentMember";
+	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from CommentMember where b_num = ?";
 	private final String SELECT_ONE_SQL = "select * from CommentMember where num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from CommentMember where num = ? and pass = ?";
 	private final String DELETE_SQL = "DELETE FROM CommentMember WHERE NUM = ? AND PASS = ?";
 	private final String UPDATE_SQL = "update CommentMember set writer=?,subject=?,content=? where num=?";
-	private final String INSERT_SQL = "insert into CommentMember(num, writer, subject, pass, regdate, ref, step, depth, content, ip) values(CommentMember_seq.nextval,?,?,?,?,?,?,?,?,?)";
+	private final String INSERT_SQL = "insert into CommentMember(num,b_num, writer, subject, pass, regdate, ref, step, depth, content, ip) values(CommentMember_seq.nextval,?,?,?,?,?,?,?,?,?,?)";
 	private final String UPDATE_STEP_SQL = "update CommentMember set step=step+1 where ref= ? and step > ?";
 	private final String UPDATE_READCOUNT_SQL = "update CommentMember set readcount=readcount+1 where num = ?";
 
@@ -88,15 +88,16 @@ public class CommentMemberDAO {
 		// 게시판글 등록하기
 		try {
 			pstmt = con.prepareStatement(INSERT_SQL);
-			pstmt.setString(1, vo.getWriter());
-			pstmt.setString(2, vo.getSubject());
-			pstmt.setString(3, vo.getPass());
-			pstmt.setTimestamp(4, vo.getRegdate());
-			pstmt.setInt(5, ref);
-			pstmt.setInt(6, step);
-			pstmt.setInt(7, depth);
-			pstmt.setString(8, vo.getContent());
-			pstmt.setString(9, vo.getIp());
+			pstmt.setInt(1, vo.getBnum());
+			pstmt.setString(2, vo.getWriter());
+			pstmt.setString(3, vo.getSubject());
+			pstmt.setString(4, vo.getPass());
+			pstmt.setTimestamp(5, vo.getRegdate());
+			pstmt.setInt(6, ref);
+			pstmt.setInt(7, step);
+			pstmt.setInt(8, depth);
+			pstmt.setString(9, vo.getContent());
+			pstmt.setString(10, vo.getIp());
 			count = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -106,14 +107,15 @@ public class CommentMemberDAO {
 		return (count > 0) ? true : false;
 	}
 
-	public int selectCountDB() {
+	public int selectCountDB(int pageNumInt) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int count = 0;
 		try {
-			pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+			pstmt = con.prepareStatement(SELECT_COUNT_BNUM_SQL);
+			pstmt.setInt(1, pageNumInt);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				count = rs.getInt("count");
@@ -137,6 +139,7 @@ public class CommentMemberDAO {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int num = rs.getInt("num");
+				int bNum = rs.getInt("b_num");
 				String writer = rs.getString("writer");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
@@ -147,8 +150,7 @@ public class CommentMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				CommentMemberVO vo = new CommentMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate,
-						content, ip);
+				CommentMemberVO vo = new CommentMemberVO(num, bNum, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 				CommentMemberList.add(vo);
 			}
 		} catch (SQLException e) {
@@ -179,6 +181,7 @@ public class CommentMemberDAO {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int num = rs.getInt("num");
+				int bnum = rs.getInt("b_num");
 				String writer = rs.getString("writer");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
@@ -189,7 +192,7 @@ public class CommentMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new CommentMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new CommentMemberVO(num, bnum, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -213,6 +216,7 @@ public class CommentMemberDAO {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int num = rs.getInt("num");
+				int bnum = rs.getInt("b_num");
 				String writer = rs.getString("writer");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
@@ -223,7 +227,7 @@ public class CommentMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				bvo = new CommentMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				bvo = new CommentMemberVO(num, bnum, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -233,20 +237,21 @@ public class CommentMemberDAO {
 		return bvo;
 	}
 
-	
-	public ArrayList<CommentMemberVO> selectStartEndDB(int start, int end) {
+	public ArrayList<CommentMemberVO> selectStartEndDB(int start, int end,int pageNumInt) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<CommentMemberVO> CommentMemberList = new ArrayList<CommentMemberVO>(end-start+1);	//arrayList갯수정해줌
 		try {
-			pstmt = con.prepareStatement(SELECT_START_END_SQL);
+			pstmt = con.prepareStatement(SELECT_START_END_BNUM_SQL);
 			pstmt.setInt(1, start);
 			pstmt.setInt(2, end);
+			pstmt.setInt(3, pageNumInt);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int num = rs.getInt("num");
+				int bNum = rs.getInt("b_num");
 				String writer = rs.getString("writer");
 				String subject = rs.getString("subject");
 				String pass = rs.getString("pass");
@@ -257,8 +262,7 @@ public class CommentMemberDAO {
 				int depth = rs.getInt("depth");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				CommentMemberVO vo = new CommentMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate,
-						content, ip);
+				CommentMemberVO vo = new CommentMemberVO(num, bNum, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
 				CommentMemberList.add(vo);
 			}
 		} catch (SQLException e) {
@@ -316,7 +320,6 @@ public class CommentMemberDAO {
 		return returnValue;
 	}
 	
-	
 	public boolean deleteDB(CommentMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
@@ -336,3 +339,4 @@ public class CommentMemberDAO {
 	}
 
 }
+

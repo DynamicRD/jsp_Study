@@ -65,7 +65,7 @@ number = count - (currentPage - 1) * pageSize;
 				<td align="center" width="100">IP</td>
 			</tr>
 			<%
-			for (BoardMemberVO article : BoardMemberList) {
+			for (BoardMemberVO bmvo : BoardMemberList) {
 				
 			%>
 			<tr height="30">
@@ -73,33 +73,33 @@ number = count - (currentPage - 1) * pageSize;
 				<td width="250">
 					<!-- 수정 <5> --> 
 					<%-- <a href="content.jsp">  --%>
-					<a href="mainPage.jsp?num=<%=article.getNum()%>&pageNum=1&tableflag=select"> 
+					<a href="mainPage.jsp?num=<%=bmvo.getNum()%>&pageNum=1&tableflag=select&cPageNum=<%=bmvo.getNum()%>"> 
 					<!-- 수정<6> -->
 					<%
 					//6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
 					//depth : 1 => 길이:5, 2=>10
 					int wid = 0;
-					if (article.getDepth() > 0) {
-						wid = 5 * article.getDepth();
+					if (bmvo.getDepth() > 0) {
+						wid = 5 * bmvo.getDepth();
 					%>
 						<img src="img/level.gif" width="<%=wid%>" height="16">	<!-- 공백 -->
   					<img src="img/re.gif">
 						<%
 					}
 						%>
-						<%=article.getSubject()%></a> 
+						<%=bmvo.getSubject()%></a> 
 <%
- if (article.getReadcount() >= 20) {
+ if (bmvo.getReadcount() >= 20) {
  %> <img src="img/hot.gif" border="0" height="16"> 
  <%
  }
  %>
 				</td>
-				<td align="center" width="100"><%=article.getWriter()%></td>
-				<td align="center" width="150"><%=sdf.format(article.getRegdate())%></td>
-				<td align="center" width="50"><%=article.getReadcount()%></td>
-				<td align="center" width="50"><%=article.getComments()%></td>
-				<td align="center" width="100"><%=article.getIp()%></td>
+				<td align="center" width="100"><%=bmvo.getWriter()%></td>
+				<td align="center" width="150"><%=sdf.format(bmvo.getRegdate())%></td>
+				<td align="center" width="50"><%=bmvo.getReadcount()%></td>
+				<td align="center" width="50"><%=bmvo.getComments()%></td>
+				<td align="center" width="100"><%=bmvo.getIp()%></td>
 			</tr>
 			<%
 			}

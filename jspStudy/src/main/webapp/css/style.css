@@ -4,37 +4,46 @@ BODY {
 	FONT-SIZE: 9pt;
 	COLOR: black;
 	LINE-HEIGHT: 160%;
+	FONT-FAMILY: 굴림, verdana, tahoma
 }
-main{
-	width: 80%;
-	margin : 0 auto;
-	border: 1px solid black;
+
+main {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
 }
-table{
-	width: 1000px
-}
+
+
 TD {
 	FONT-SIZE: 9pt;
 	COLOR: black;
 	LINE-HEIGHT: 160%;
+	FONT-FAMILY: 굴림, verdana, tahoma
 }
 
 SELECT {
 	FONT-SIZE: 9pt;
 	COLOR: black;
 	LINE-HEIGHT: 160%;
+	FONT-FAMILY: 굴림, verdana, tahoma
 }
 
 DIV {
 	FONT-SIZE: 9pt;
 	COLOR: black;
 	LINE-HEIGHT: 160%;
+	FONT-FAMILY: 굴림, verdana, tahoma
 }
 
 FORM {
 	FONT-SIZE: 9pt;
 	COLOR: black;
 	LINE-HEIGHT: 160%;
+	FONT-FAMILY: 굴림, verdana, tahoma
 }
 
 TEXTAREA {
@@ -44,6 +53,7 @@ TEXTAREA {
 	BORDER-LEFT: 1px solid #999999;
 	COLOR: BLACK;
 	BORDER-BOTTOM: 1px solid #999999;
+	FONT-FAMILY: 굴림, verdana;
 	BACKGROUND-COLOR: white
 }
 
@@ -54,17 +64,22 @@ INPUT {
 	BORDER-LEFT: 1px solid #999999;
 	COLOR: BLACK;
 	BORDER-BOTTOM: 1px solid #999999;
+	FONT-FAMILY: 굴림, verdana;
+	HEIGHT: 19px;
 	BACKGROUND-COLOR: white
 }
 
 A:link {
-	text-decoration: #696969
+	text-decoration: none;
+	color: #696969
 }
 
 A:hover {
-	text-decoration: #66CCFF
+	text-decoration: yes;
+	color: #66CCFF
 }
 
 A:visited {
-	text-decoration: #330066
+	text-decoration: none;
+	color: #330066
 }

@@ -25,59 +25,16 @@
 </head>
 <body onload="carousel(); inputCheck(); inputCheck2();">
 	<div class="header">
-		<p>
-			<i class="fa-solid fa-house"></i> 개인웹사이트
-		</p>
-		<ul>
-			<li class="dropdown"><a href="#" class="dropbtn">menu</a>
-				<div class="dropdown-content">
-					<a href="#">select</a> <a href="#">select</a> <a href="#">select</a>
-				</div></li>
-			<li class="dropdown"><a href="#" class="dropbtn">menu</a>
-				<div class="dropdown-content">
-					<a href="#">select</a> <a href="#">select</a> <a href="#">select</a>
-				</div></li>
-			<li class="dropdown"><a href="#" class="dropbtn">menu</a>
-				<div class="dropdown-content">
-					<a href="#">select</a> <a href="#">select</a> <a href="#">select</a>
-				</div></li>
-			<li class="dropdown"><a href="#" class="dropbtn">menu</a>
-				<div class="dropdown-content">
-					<a href="#">select</a> <a href="#">select</a> <a href="#">select</a>
-				</div></li>
-		</ul>
-		<p>
-			<a href=""><i class="fa-brands fa-facebook"></i></a> <a href=""><i
-				class="fa-solid fa-dove"></i></a>
-		</p>
+		<%@ include file="./dropMenu.jsp"%>
 	</div>
-	<div class="slideshow">
-		<div class="slideshow_slides">
-			<a href="#"><img src="/images/slide-1.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-2.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-3.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-4.jpg" alt=""></a>
-		</div>
-		<div class="slideshow_nav">
-			<a href="#" class="prev"><i
-				class="fa-solid fa-circle-chevron-left"></i></a> <a href="#"
-				class="next"><i class="fa-solid fa-circle-chevron-right"></i></a>
-		</div>
-		<div class="shlideshow_indicator">
-			<a href="#" class="active"><i class="fa-solid fa-circle-dot"></i></a>
-			<a href="#"><i class="fa-solid fa-circle-dot"></i></a> <a href="#"><i
-				class="fa-solid fa-circle-dot"></i></a> <a href="#"><i
-				class="fa-solid fa-circle-dot"></i></a>
-		</div>
-	</div>
+		<%@ include file="./carousel.jsp"%>
 	<div class="tbody">
 		<div class="left">
 			공지사항
 			<div class="left1"></div>
 			<div class="left2"></div>
 		</div>
-		
-<!-- 		가운데 -->
+<!-- 		가운데     	-->
 		<div class="center">
 <% 
 		  	//회원가입 화면을 띄운다
@@ -100,7 +57,7 @@
 				} else if(tableflag.equals("select")){
 %>
 			<%@ include file="./content.jsp"%>
-			<%-- <%@ include file="./comments.jsp"%> --%>
+			<%@ include file="./comments/commentMenu.jsp"%>
 <%
 				} else if(tableflag.equals("update")){
 %>
