@@ -31,7 +31,7 @@ public class CommentMemberDAO {
 	private final String SELECT_START_END_BNUM_SQL = " select * from "
 			+ "(select rownum AS rnum, num,b_num, writer, subject, pass, regdate, readcount, ref, step, depth, content, ip "
 			+ "from (select * from CommentMember order by ref desc, step asc)) where rnum>=? and rnum<=? and b_num = ?";
-	private final String SELECT_COUNT_BNUM_SQL = "select count(*) as count from CommentMember";
+	private final String SELECT_COUNT_BNUM_SQL = "select count(*) as count from CommentMember where b_num = ?";
 	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from CommentMember where b_num = ?";
 	private final String SELECT_ONE_SQL = "select * from CommentMember where num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from CommentMember where num = ? and pass = ?";
@@ -263,6 +263,7 @@ public class CommentMemberDAO {
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
 				CommentMemberVO vo = new CommentMemberVO(num, bNum, writer, subject, pass, readcount, ref, step, depth, regdate, content, ip);
+				System.out.println(vo.toString());
 				CommentMemberList.add(vo);
 			}
 		} catch (SQLException e) {

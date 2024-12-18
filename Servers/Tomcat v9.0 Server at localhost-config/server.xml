@@ -163,7 +163,7 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 			
 			<Context docBase="C:\dev\eclipseWorkspace\jspStudy\src\main\webapp\homepageProject\img" path="/images" reloadable="true"/>   
-      <Context docBase="jspStudy" path="/jspStudy" reloadable="true" source="org.eclipse.jst.jee.server:jspStudy"/></Host>
+      <Context docBase="jspStudy" path="/jspStudy" reloadable="true" source="org.eclipse.jst.jee.server:jspStudy"/><Context docBase="jspStudy2" path="/jspStudy2" reloadable="true" source="org.eclipse.jst.jee.server:jspStudy2"/></Host>
 			
     </Engine>
   </Service>

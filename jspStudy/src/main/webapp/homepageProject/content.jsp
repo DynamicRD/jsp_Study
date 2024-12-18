@@ -22,30 +22,29 @@ int depth=bvo.getDepth();
 	<main>
 		<b>글내용 보기</b> <br></br>
 		<form>
-			<table width="500" border="1" cellspacing="0" cellpadding="0"
+			<table width="700" border="1" cellspacing="0" cellpadding="0"
 				 align="center">
 				<tr height="30">
-					<td align="center" width="125">글번호</td>
-					<td align="center" width="125" align="center"><%=bvo.getNum()%></td>
-					<td align="center" width="125">조회수</td>
-					<td align="center" width="125" align="center"><%=bvo.getReadcount()%></td>
-				</tr>
+					<td align="center" width="125" bgcolor="lightgrey">글번호</td>
+					<td align="center" width="100" align="center" bgcolor="white"><%=bvo.getNum()%></td>
+					<td align="center" width="50" bgcolor="lightgrey">작성자</td>
+					<td align="center" width="125" align="center" bgcolor="white"><%=bvo.getWriter()%></td>
+					<td align="center" width="50" bgcolor="lightgrey">작성일</td>
+					<td align="center" width="125" align="center" bgcolor="white"><%= sdf.format(bvo.getRegdate())%></td>
+					<td align="center" width="50" bgcolor="lightgrey">조회수</td>
+					<td align="center" width="50" align="center" bgcolor="white"><%=bvo.getReadcount()%></td>
 				<tr height="30">
-					<td align="center" width="125">작성자</td>
-					<td align="center" width="125" align="center"><%=bvo.getWriter()%></td>
-					<td align="center" width="125">작성일</td>
-					<td align="center" width="125" align="center"><%= sdf.format(bvo.getRegdate())%></td>
-				</tr>
-				<tr height="30">
-					<td align="center" width="125">글제목</td>
-					<td align="center" width="375" align="center" colspan="3"><%=bvo.getSubject()%></td>
+					<td align="center" width="125" bgcolor="lightgrey">글제목</td>
+					<td align="center" width="375" align="center" colspan="7" bgcolor="white"><%=bvo.getSubject()%></td>
 				</tr>
 				<tr>
-					<td align="center" width="125">글내용</td>
-					<td align="left" width="375" colspan="3"><pre><%=bvo.getContent()%></pre></td>
+    			<td align="center" width="125" bgcolor="lightgrey">글내용</td>
+    			<td align="left" width="375" colspan="7" bgcolor="white" style="height: 400px; overflow: auto; vertical-align: top;">
+        	<%=bvo.getContent() %>
+   			 </td>
 				</tr>
 				<tr height="30">
-					<td colspan="4" align="right">
+					<td colspan="8 align="right" bgcolor="lightgrey">
 						<%
     		String sessionId = (String) session.getAttribute("id");  // 회원 id
     		String writer = bvo.getWriter();  // 글쓴이 이름

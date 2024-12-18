@@ -63,16 +63,22 @@
     <servlet-name>hello</servlet-name>
     <url-pattern>/hello.do</url-pattern>
   </servlet-mapping>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/error/error404.jsp</location>
-	</error-page>	
-	<error-page>
-		<error-code>500</error-code>
-		<location>/error/error500.jsp</location>
-	</error-page>	
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/error404.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/error500.jsp</location>
+  </error-page>
+  <!-- <servlet>
+    <description></description>
+    <display-name>ControlServlet</display-name>
+    <servlet-name>ControlServlet</servlet-name>
+    <servlet-class>co.kh.dev.mvc.control.ControlServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ControlServlet</servlet-name>
+    <url-pattern>/ControlServlet</url-pattern>
+  </servlet-mapping> -->
 </web-app>
-
-
-
-

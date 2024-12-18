@@ -18,47 +18,41 @@ if (cPageNum == null) {
 int cCurrentPage = Integer.parseInt(cPageNum);
 int cStart = (cCurrentPage - 1) * cPageSize + 1; // 4페이지 시작보여줘 (4-1)*10+1=>31
 int cEnd = (cCurrentPage - 1) * cPageSize + 10; // 4페이지 끝번호 보여줘 4*10 =>40
-
+System.out.println("cStart="+cStart);
+System.out.println("cEnd="+cEnd);
 //게시판 목록의 번호를 받아온다
-int pageNumInt = 0;
-if(request.getParameter("pageNum") != null){
-pageNumInt = Integer.parseInt(request.getParameter("pageNum"));
+int numInt = 0;
+if(request.getParameter("num") != null){
+numInt = Integer.parseInt(request.getParameter("num"));
 }
 
 SimpleDateFormat cSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
 <%
+//---------여까지 이상 없음
 // 4. 해당된 페이지 10개를 가져온다
 int cNumber = 0;
 ArrayList<CommentMemberVO> cCommentMemberList = null;
 CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 
+System.out.println("numInt="+numInt);
 //현재페이지의 댓글 개수 가져온다
-int cCount = cBdao.selectCountDB(pageNumInt); // 전체 글수
-if (cCount > 0) {
+int cCount = cBdao.selectCountDB(numInt); // 전체 글수
+System.out.println("cCount ="+cCount);
+
+ if (cCount > 0) {
     // 현재페이지 내용 10개만 가져온다
     // 현재 페이지의 내용만 가져온다
-    cCommentMemberList = cBdao.selectStartEndDB(cStart, cEnd,pageNumInt);
+    cCommentMemberList = cBdao.selectStartEndDB(cStart, cEnd,numInt);
     Collections.reverse(cCommentMemberList);
 }
 // 5. 만약 4페이지를 가져왔다면(31~40)을 가져왔다면 NUMBER = 40 전체객수 100 1페이지(100~91) 2페이지(90~81)
 cNumber = (cCurrentPage - 1) * cPageSize +1;
 %>
-<html>
-<head>
-<title>게시판</title>
-<link href="style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
+
     <main>
         <b>댓글(전체 댓글수:<%=cCount%>)
         </b>
-        <table width="700">
-            <tr>
-                <td align="right"><a
-                    href="writeForm.jsp">글쓰기</a></td>
-            </tr>
-        </table>
         <%
         if (cCount == 0) {
         %>
@@ -71,24 +65,23 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         %>
         <table border="1" width="700" cellpadding="0" cellspacing="0"
             align="center">
-            <tr height="30">
-                <td align="center" width="50">번 호</td>
-                <td align="center" width="250">제 목</td>
-                <td align="center" width="100">작성자</td>
-                <td align="center" width="150">작성일</td>
-                <td align="center" width="50">조 회</td>
-                <td align="center" width="100">IP</td>
-            </tr>
             <%
             for (CommentMemberVO cmvo : cCommentMemberList) {
-                
+                cmvo.toString();
             %>
             <tr height="30">
-                <td align="center" width="50"><%=cNumber++%></td>
-                <td width="250">
-                    <!-- 수정 <5> --> 
-                    <a href="content.jsp?num=<%=cmvo.getNum()%>&ppageNum=<%=cCurrentPage%>"> 
-                    <!-- 수정<6> -->
+                <td align="center" width="50" bgcolor="lightgrey"><%=cNumber++%></td>
+                <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getWriter()%></td>
+                <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getIp()%></td>
+                <td align="center" width="150" bgcolor="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
+                <td align="center" width="100" bgcolor="lightgrey">
+										<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num='">
+										&nbsp;&nbsp; 
+										<input type="button" value="삭제" onclick="document.location.href='mainPage.jsp?num='">
+								</td>
+            </tr>
+            <tr>
+                <td width="250" colspan="5" bgcolor="white" align="left">
                     <%
                     // 6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
                     // depth : 1 => 길이:5, 2=>10
@@ -101,39 +94,26 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                         <%
                     }
                         %>
-                        <%=cmvo.getSubject()%></a> 
-<%
- if (cmvo.getReadcount() >= 20) {
- %> <img src="images/hot.gif" border="0" height="16"> 
- <%
- }
- %>
+                        <%=cmvo.getContent()%></a> 
                 </td>
-                <td align="center" width="100"><%=cmvo.getWriter()%></td>
-                <td align="center" width="150"><%=cSdf.format(cmvo.getRegdate())%></td>
-                <td align="center" width="50"><%=cmvo.getReadcount()%></td>
-                <td align="center" width="100"><%=cmvo.getIp()%></td>
             </tr>
+            
 <%
             }
-%>
-        </table>
-</main>
-<br>
-<%
         }
 %>
+        </table>
+
+<br>
 
 
-
-<%-- 
 <!-- 쓰기영역 -->
 <%
  // 새로운 글로 입력(num=0, ref=0, step=0, depth=0)
  // 부모글에 대한 답변으로 입력(num=부모값, ref=부모값, step=부모값, depth=부모값)
  int cNum = 0, cRef = 1, cStep = 0, cDepth = 0;
  try {
-     if (request.getParameter("num") != null) {
+     if (request.getParameter("cNum") != null) {
          cNum = Integer.parseInt(request.getParameter("cNum"));
          cRef = Integer.parseInt(request.getParameter("cRef"));
          cStep = Integer.parseInt(request.getParameter("cStep"));
@@ -141,8 +121,6 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
      }
 %>
 <div>
-    <b>글쓰기</b>
-    <br></br>
     <form method="post" name="cWriteForm" action="writeProc.jsp" onsubmit="return writeSave()">
         <%if(session.getAttribute("id")!=null){%>
             <input type="hidden" size="30" maxlength="30" name="cPass" value="<%=session.getAttribute("pass")%>" />
@@ -151,13 +129,10 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         <input type="hidden" name="cRef" value="<%=cRef%>"> 
         <input type="hidden" name="cStep" value="<%=cStep%>"> 
         <input type="hidden" name="cDepth" value="<%=cDepth%>">
-        <table width="400" border="1" cellpadding="0" cellspacing="0" align="center">
+        <table width="700" border="1" cellpadding="0" cellspacing="0" align="center">
             <tr>
-                <td align="right" colspan="2"><a href="mainPage.jsp">글목록</a></td>
-            </tr>
-            <tr>
-                <td width="70" align="center">이름</td>
-                <td width="330"  align="left" >
+                <td align="center" bgcolor="lightgrey">이름</td>
+                <td align="left"  bgcolor="white">
                 <%if(session.getAttribute("id")!=null){%>
                     <input type="hidden" size="12" maxlength="12" name="cWriter" value="<%=session.getAttribute("id")%>"/>
                     <%=session.getAttribute("id")%>
@@ -165,42 +140,19 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                     <input type="text" size="12" maxlength="12" name="cWriter" />
                 <%} %>
                 </td>
-            </tr>
-            <tr>
-                <td width="70" align="center">제목</td>
-                <td width="330">
-                    <% 
-                        if (request.getParameter("cNum") == null) {
-                    %> 
-                        <input type="text" size="50" maxlength="50" name="cSubject" /> 
-                    <% 
-                        } else { 
-                    %> 
-                        <input type="text" size="50" maxlength="50" name="cSubject" value="[답변]" />
-                    <% 
-                        } 
-                    %>
-                </td>
-            </tr>
-            <tr>
-                <td width="70" align="center">내용</td>
-                <td width="330">
-                    <textarea name="cContent" rows="13" cols="50"></textarea>
-                </td>
-            </tr>
-            <%if(session.getAttribute("id")==null){%>
-            <tr>
-                <td width="70" align="center">비밀번호</td>
-                <td width="330" align="left" >
+                <td align="center" bgcolor="lightgrey">비밀번호</td>
+                <td  align="left"  bgcolor="white">
                     <input type="password" size="10" maxlength="10" name="cPass" />
                 </td>
-            </tr>
-            <%} %>
-            <tr>
-                <td colspan="2" align="center">
+                <td colspan="2" align="center" bgcolor="lightgrey">
                     <input type="submit" value="글쓰기" /> 
                     <input type="reset" value="다시작성" />
-                    <input type="button" value="목록" onClick="window.location='mainPage.jsp'">
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="lightgrey">내용</td>
+                <td  colspan="4" bgcolor="white">
+                    <textarea name="cContent" ></textarea>
                 </td>
             </tr>
         </table>
@@ -210,9 +162,6 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
 } catch (Exception e) {
 }
 %>
-
-
- --%>
 
 
 
@@ -254,4 +203,5 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
 <%            
         }
 %>
-</div>
+		</div>
+	</main>

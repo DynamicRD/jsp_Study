@@ -73,7 +73,7 @@ number = count - (currentPage - 1) * pageSize;
 				<td width="250">
 					<!-- 수정 <5> --> 
 					<%-- <a href="content.jsp">  --%>
-					<a href="mainPage.jsp?num=<%=bmvo.getNum()%>&pageNum=1&tableflag=select&cPageNum=<%=bmvo.getNum()%>"> 
+					<a href="mainPage.jsp?num=<%=bmvo.getNum()%>&pageNum=1&tableflag=select&cPageNum=1"> 
 					<!-- 수정<6> -->
 					<%
 					//6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
