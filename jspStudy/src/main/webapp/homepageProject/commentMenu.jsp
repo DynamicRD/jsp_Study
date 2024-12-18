@@ -121,7 +121,7 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
      }
 %>
 <div>
-    <form method="post" name="cWriteForm" action="commentWriteProc.jsp" onsubmit="return writeSave()">
+    <form method="post" name="cWriteForm" action="commentWriteProc.jsp?commentPage=<%=numInt%>" onsubmit="return writeSave()">
         <%if(session.getAttribute("id")!=null){%>
             <input type="hidden" size="30" maxlength="30" name="cPass" value="<%=session.getAttribute("pass")%>" />
         <%} %>        
@@ -142,7 +142,9 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                 </td>
                 <td align="center" bgcolor="lightgrey">비밀번호</td>
                 <td  align="left"  bgcolor="white">
+                  <%if(session.getAttribute("id")==null){%>
                     <input type="password" size="10" maxlength="10" name="cPass" />
+                   <%} %>        
                 </td>
                 <td colspan="2" align="center" bgcolor="lightgrey">
                     <input type="submit" value="댓글쓰기" /> 
@@ -162,7 +164,6 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
 } catch (Exception e) {
 }
 %>
-
 
 
 

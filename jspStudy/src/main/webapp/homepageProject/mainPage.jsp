@@ -24,7 +24,7 @@
 	crossorigin="anonymous"></script>
 </head>
 <body onload="carousel(); inputCheck(); inputCheck2();">
-	<div class="header">
+	<div class="header" >
 		<%@ include file="./dropMenu.jsp"%>
 	</div>
 		<%@ include file="./carousel.jsp"%>
@@ -57,7 +57,7 @@
 				} else if(tableflag.equals("select")){
 %>
 			<%@ include file="./content.jsp"%>
-			<%@ include file="./comments/commentMenu.jsp"%>
+			<%@ include file="./commentMenu.jsp"%>
 <%
 				} else if(tableflag.equals("update")){
 %>

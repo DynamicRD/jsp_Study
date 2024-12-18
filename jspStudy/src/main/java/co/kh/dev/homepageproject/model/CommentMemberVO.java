@@ -6,9 +6,7 @@ public class CommentMemberVO {
 	private int num;
 	private int Bnum;
 	private String writer;
-	private String subject;
 	private String pass;
-	private int readcount;
 	private int ref;
 	private int step;
 	private int depth;
@@ -21,15 +19,13 @@ public class CommentMemberVO {
 	}
 
 	
-	public CommentMemberVO(int num, int bnum, String writer, String subject, String pass, int readcount, int ref,
+	public CommentMemberVO(int num, int bnum, String writer, String pass, int ref,
 			int step, int depth, Timestamp regdate, String content, String ip) {
 		super();
 		this.num = num;
 		Bnum = bnum;
 		this.writer = writer;
-		this.subject = subject;
 		this.pass = pass;
-		this.readcount = readcount;
 		this.ref = ref;
 		this.step = step;
 		this.depth = depth;
@@ -65,28 +61,12 @@ public class CommentMemberVO {
 		this.writer = writer;
 	}
 
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
 	public String getPass() {
 		return pass;
 	}
 
 	public void setPass(String pass) {
 		this.pass = pass;
-	}
-
-	public int getReadcount() {
-		return readcount;
-	}
-
-	public void setReadcount(int readcount) {
-		this.readcount = readcount;
 	}
 
 	public int getRef() {
@@ -139,8 +119,8 @@ public class CommentMemberVO {
 
 	@Override
 	public String toString() {
-		return "BoardVO [num=" + num + ", writer=" + writer + ", subject=" + subject + ", pass="
-				+ pass + ", readcount=" + readcount + ", ref=" + ref + ", step=" + step + ", depth=" + depth
+		return "BoardVO [num=" + num + ", writer=" + writer + ", pass="
+				+ pass +", ref=" + ref + ", step=" + step + ", depth=" + depth
 				+ ", content=" + content + ", ip=" + ip + "]";
 	}
 }

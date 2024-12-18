@@ -25,12 +25,12 @@ try {
 		<input type="hidden" name="depth" value="<%=depth%>">
 		<table width="400" border="1" cellpadding="0" cellspacing="0" align="center">
 			<tr>
-				<td align="right" colspan="2"><a
+				<td align="right" colspan="2"  bgcolor="lightgrey" ><a
 					href="mainPage.jsp">글목록</a></td>
 			</tr>
 			<tr>
-				<td width="70" align="center">이름</td>
-				<td width="330"  align="left" >
+				<td width="70" align="center"  bgcolor="lightgrey" >이름</td>
+				<td width="330"  align="left"  bgcolor="white" >
 				<%if(session.getAttribute("id")!=null){%>
 					<input type="hidden" size="12" maxlength="12" name="writer" value="<%=session.getAttribute("id")%>"/>
 					<%=session.getAttribute("id")%>
@@ -51,8 +51,8 @@ try {
 				</td>
 			</tr>  --%>
 			<tr>
-				<td width="70" align="center">제목</td>
-				<td width="330">
+				<td width="70" align="center"  bgcolor="lightgrey" >제목</td>
+				<td width="330"  bgcolor="white" >
 <%
 					if (request.getParameter("num") == null) {
 %> 				<input type="text" size="50" maxlength="50" name="subject" /> 
@@ -66,20 +66,20 @@ try {
 				</td>
 			</tr>
 			<tr>
-				<td width="70" align="center">내용</td>
-				<td width="330"><textarea name="content" rows="13" cols="50"></textarea>
+				<td width="70" align="center"  bgcolor="lightgrey" >내용</td>
+				<td width="330"  bgcolor="white" ><textarea name="content" rows="13" cols="50"></textarea>
 				</td>
 			</tr>
 			<%if(session.getAttribute("id")==null){%>
 			<tr>
-				<td width="70" align="center">비밀번호</td>
+				<td width="70" align="center"  bgcolor="lightgrey" >비밀번호</td>
 				<td width="330" align="left" >
 					<input type="password" size="10" maxlength="10" name="pass" />
 				</td>
 			</tr>
 			<%} %>
 			<tr>
-				<td colspan="2" align="center"><input
+				<td colspan="2" align="center" bgcolor="lightgrey" ><input
 					type="submit" value="글쓰기" /> <input type="reset" value="다시작성" />
 					<input type="button" value="목록"
 					onClick="window.location='mainPage.jsp'"></td>
