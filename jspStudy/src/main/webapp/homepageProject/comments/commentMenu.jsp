@@ -56,14 +56,14 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         <%
         if (cCount == 0) {
         %>
-        <table width="700" border="1" cellpadding="0" cellspacing="0">
+        <table width="500" border="1" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="center">댓글이 없습니다.</td>
         </table>
         <%
         } else {
         %>
-        <table border="1" width="700" cellpadding="0" cellspacing="0"
+        <table border="1" width="500" cellpadding="0" cellspacing="0"
             align="center">
             <%
             for (CommentMemberVO cmvo : cCommentMemberList) {
@@ -121,15 +121,15 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
      }
 %>
 <div>
-    <form method="post" name="cWriteForm" action="writeProc.jsp" onsubmit="return writeSave()">
+    <form method="post" name="cWriteForm" action="commentWriteProc.jsp" onsubmit="return writeSave()">
         <%if(session.getAttribute("id")!=null){%>
             <input type="hidden" size="30" maxlength="30" name="cPass" value="<%=session.getAttribute("pass")%>" />
         <%} %>        
-        <input type="hidden" name="cNum" value="<%=cNum%>"> 
-        <input type="hidden" name="cRef" value="<%=cRef%>"> 
-        <input type="hidden" name="cStep" value="<%=cStep%>"> 
-        <input type="hidden" name="cDepth" value="<%=cDepth%>">
-        <table width="700" border="1" cellpadding="0" cellspacing="0" align="center">
+        	<input type="hidden" name="cNum" value="<%=cNum%>"> 
+        	<input type="hidden" name="cRef" value="<%=cRef%>"> 
+        	<input type="hidden" name="cStep" value="<%=cStep%>"> 
+        	<input type="hidden" name="cDepth" value="<%=cDepth%>">
+        <table width="500" border="1" cellpadding="0" cellspacing="0" align="center">
             <tr>
                 <td align="center" bgcolor="lightgrey">이름</td>
                 <td align="left"  bgcolor="white">
@@ -145,14 +145,14 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                     <input type="password" size="10" maxlength="10" name="cPass" />
                 </td>
                 <td colspan="2" align="center" bgcolor="lightgrey">
-                    <input type="submit" value="글쓰기" /> 
+                    <input type="submit" value="댓글쓰기" /> 
                     <input type="reset" value="다시작성" />
                 </td>
             </tr>
             <tr>
                 <td align="center" bgcolor="lightgrey">내용</td>
-                <td  colspan="4" bgcolor="white">
-                    <textarea name="cContent" ></textarea>
+                <td  align="left" colspan="4" bgcolor="white">
+                    <textarea name="cContent" cols="60"></textarea>
                 </td>
             </tr>
         </table>
