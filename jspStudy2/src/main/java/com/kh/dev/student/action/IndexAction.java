@@ -10,7 +10,7 @@ import com.kh.dev.student.control.ActionForward;
 public class IndexAction implements Action {
 
 	@Override
-	public ActionForward execute(HttpServletRequest request, HttpServletResponse reponse) throws IOException {
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		return new ActionForward("/mvcmem/index.jsp",false);
 	}
 

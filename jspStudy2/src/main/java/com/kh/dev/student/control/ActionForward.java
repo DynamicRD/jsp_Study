@@ -2,15 +2,14 @@ package com.kh.dev.student.control;
 
 public class ActionForward {
 	private String url;			//화면요청
-	private boolean redirect;	//true: sendRedirect, false면 forward
+	private boolean redirect;  	//true: redirect, false: farward
 	public ActionForward() {
 		super();
 	}
-	public ActionForward(boolean redirect) {
+	public ActionForward(String url) {
 		super();
-		this.redirect = redirect;
+		this.url = url;
 	}
-	
 	public ActionForward(String url, boolean redirect) {
 		super();
 		this.url = url;
@@ -28,6 +27,8 @@ public class ActionForward {
 	public void setRedirect(boolean redirect) {
 		this.redirect = redirect;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "ActionForward [url=" + url + ", redirect=" + redirect + "]";
+	}
 }

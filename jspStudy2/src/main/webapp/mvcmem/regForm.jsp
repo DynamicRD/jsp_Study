@@ -1,9 +1,10 @@
-<%@page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <html>
 <head>
 <title>Register Form</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
-<script language="javascript" src="script.js"></script>
+<script language="javascript" src="script.js?timestamp=<%=System.currentTimeMillis()%>">
+</script>
 </head>
 <body>
 	<main>
@@ -14,10 +15,8 @@
 				</tr>
 				<tr>
 					<td align="right">아이디 :</td>
-					<td>
-						<input type="text" name="id" />&nbsp; 
-						<input type="button" value="중복확인" onClick="idCheck(this.form.id.value)" />
-					</td>
+					<td><input type="text" name="id" />&nbsp; 
+						<input type="button" value="중복확인" onClick="idCheck()" /></td>
 				</tr>
 				<tr>
 					<td align="right">패스워드 :</td>
@@ -45,10 +44,8 @@
 				</tr>
 				<tr>
 					<td align="right">우편번호 :</td>
-					<td>
-						<input type="text" name="zipcode" /> 
-						<input type="button" value="찾기" onClick="zipCheck()" />
-					</td>
+					<td><input type="text" name="zipcode" /> 
+					  <input type="button" value="찾기" onClick="zipCheck()" /></td>
 				</tr>
 				<tr>
 					<td align="right">주소1 :</td>
@@ -61,8 +58,7 @@
 				<tr>
 					<td colspan="2" align="center">
 						<input type="button" value="회원가입" onClick="inputCheck()" />&nbsp;&nbsp; 
-						<input type="reset" value="다시입력" />
-					</td>
+						<input type="reset" value="다시입력" /></td>
 				</tr>
 			</table>
 		</form>

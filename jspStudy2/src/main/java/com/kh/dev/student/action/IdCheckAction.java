@@ -12,15 +12,15 @@ import com.kh.dev.student.model.StudentVO;
 public class IdCheckAction implements Action {
 
 	@Override
-	public ActionForward execute(HttpServletRequest request, HttpServletResponse reponse) throws IOException {
+	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		StudentDAO dao = StudentDAO.getInstance();
 		StudentVO svo = new StudentVO();
 		String id = request.getParameter("id");
 		svo.setId(id);
 		boolean check = dao.selectIdCheck(svo);
+		
 		request.setAttribute("id", id);
 		request.setAttribute("check", check);
 		return new ActionForward("/mvcmem/idCheck.jsp", false);
 	}
-
 }

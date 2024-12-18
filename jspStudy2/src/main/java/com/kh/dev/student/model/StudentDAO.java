@@ -8,20 +8,19 @@ import java.util.ArrayList;
 
 import com.kh.dev.common.ConnectionPool;
 
+
+
 public class StudentDAO {
 	private static StudentDAO studentDAO;
 	
+	private StudentDAO() {}
+	
 	public static synchronized StudentDAO getInstance() {
 		if(studentDAO == null) {
-			studentDAO = new StudentDAO();
+			studentDAO = new StudentDAO(); 
 		}
 		return studentDAO;
 	}
-	
-	
-	
-	
-	
 	private final String SELECT_SQL = "SELECT * FROM STUDENT";
 	private final String SELECT_ONE_SQL = "SELECT * FROM STUDENT WHERE ID = ?";
 	private final String SELECT_BY_ID_SQL = "SELECT count(*) as count FROM STUDENT WHERE ID = ?";
@@ -112,6 +111,7 @@ public class StudentDAO {
 		} finally {
 			cp.dbClose(con, pstmt, rs);
 		}
+		System.out.println("StudentDAO count="+count);
 		return (count != 0) ? true : false;
 	}
 	
@@ -129,6 +129,8 @@ public class StudentDAO {
 			if (rs.next()) {
 				pass = rs.getString("PASS");
 				check = (pass.equals(svo.getPass()) == true)?(1):(0); 
+			}else {
+				check = -1; 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

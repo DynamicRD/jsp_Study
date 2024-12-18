@@ -1,5 +1,5 @@
-/*회원가입폼 아이디체크*/
-function idCheck(id) {
+/*회원가입폼 아이디검색*/
+function idCheck() {
 	let value = document.regForm.id.value;
 	if (value === "") {
 		alert("아이디를 입력해 주세요.");
@@ -9,13 +9,11 @@ function idCheck(id) {
 		window.open(url, "post", "width=500,height=300");
 	}
 }
-
 /*회원가입폼 주소체크*/
 function zipCheck() {
 	url = "zipCheck.do?check=y";
-	window.open(url, "post", "toolbar=no ,width=600 ,height=300 , directories=no,status=yes,scrollbars=yes,menubar=no");
+	window.open(url, "post", "toolbar=no ,width=600 ,height=300, directories=no,status=yes,scrollbars=yes,menubar=no");
 }
-
 /*회원가입폼 동체크*/
 function dongCheck() {
 	let value = document.zipForm.dong.value;
@@ -24,9 +22,8 @@ function dongCheck() {
 		document.zipForm.dong.focus();
 		return;
 	}
-	document.zipForm.submit()
+	document.zipForm.submit();
 }
-
 /*주소내용을 불러주는 윈도우창 각 요소저장*/
 function sendAddress(zipcode, sido, gugun, dong, bunji) {
 	var address = sido + " " + gugun + " " + dong + " " + bunji;
@@ -34,7 +31,6 @@ function sendAddress(zipcode, sido, gugun, dong, bunji) {
 	opener.document.regForm.address1.value = address;
 	self.close();
 }
-
 /*회원가입폼 패턴검색*/
 function inputCheck() {
 	if (document.regForm.id.value == "") {
@@ -109,7 +105,7 @@ function inputCheck() {
 	document.regForm.submit();
 }
 
-//회원수정폼 패턴검색
+/*회원수정폼 패턴검색*/
 function updateCheck() {
 	if (document.regForm.pass.value == "") {
 		alert("비밀번호를 입력해 주세요.");
@@ -125,11 +121,6 @@ function updateCheck() {
 		document.regForm.repass.value) {
 		alert("비밀번호가 일치하지 않습니다.");
 		document.regForm.repass.focus();
-		return;
-	}
-	if (document.regForm.name.value == "") {
-		alert("이름을 입력해 주세요.");
-		document.regForm.name.focus();
 		return;
 	}
 	if (document.regForm.phone1.value == "") {
@@ -159,7 +150,6 @@ function updateCheck() {
 		document.regForm.email.focus();
 		return;
 	}
-
 	if (document.regForm.zipcode.value == "") {
 		alert("우편번호를 입력해 주세요.");
 		document.regForm.zipcode.focus();

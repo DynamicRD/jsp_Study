@@ -3,77 +3,68 @@ package com.kh.dev.student.control;
 import com.kh.dev.student.action.Action;
 import com.kh.dev.student.action.IdCheckAction;
 import com.kh.dev.student.action.IndexAction;
+import com.kh.dev.student.action.LoginFormAction;
+import com.kh.dev.student.action.LoginProcAction;
+import com.kh.dev.student.action.LogoutAction;
+import com.kh.dev.student.action.ModifyFormAction;
 import com.kh.dev.student.action.RegFormAction;
+import com.kh.dev.student.action.RegProcAction;
 import com.kh.dev.student.action.ZipCheckAction;
 
-//싱글톤
+//싱글톤방식
 public class ActionFactory {
 	private static ActionFactory factory;
 
 	public static synchronized ActionFactory getInstance() {
-		if (factory == null) {
+		if(factory == null) {
 			factory = new ActionFactory();
 		}
 		return factory;
-	}
-
-	private ActionFactory() {
-	}
-
+	} 
+	
+	private ActionFactory() {}
+	
 	public Action getAction(String cmd) {
 		Action action = null;
+	
 		switch (cmd) {
-		case "index.do":
+		case "/index.do":
 			action = new IndexAction();
 			break;
-		case "regForm.do":
+		case "/regForm.do":
 			action = new RegFormAction();
 			break;
-		case "idCheck.do":
+		case "/idCheck.do":
 			action = new IdCheckAction();
 			break;
-		case "zipCheck":
+		case "/zipCheck.do":
 			action = new ZipCheckAction();
 			break;
-		default:
-			action = new IndexAction();
-			break;
-		/*
-		case "login":
-			action = new LoginFormAction();
-			break;
-		case "loginProc":
-			action = new LoginProcAction();
-			break;
-		case "logout":
-			action = new LogoutAction();
-			break;
-		case "regForm":
-			action = new RegFormAction();
-			break;
-		case "regProc":
+		case "/regProc.do":
 			action = new RegProcAction();
 			break;
-		case "modifyForm":
+		case "/login.do":
+			action = new LoginFormAction();
+			break;
+		case "/loginProc.do":
+			action = new LoginProcAction();
+			break;
+		case "/logout.do":
+			action = new LogoutAction();
+			break;
+		case "/modifyForm.do":
 			action = new ModifyFormAction();
 			break;
-		case "modifyProc":
-			action = new ModifyProcAction();
+		case "/modifyProc.do":
+			action = new ModifyFormAction();
 			break;
-		case "deleteForm":
-			action = new DeleteFormAction();
-			break;
-		case "deleteProc":
-			action = new DeleteProcAction();
-			break;
-		case "idCheck":
-			action = new IdCheckAction();
-			break;
-		
 		default:
 			action = new IndexAction();
-			break;*/
+			break;
 		}
+	
 		return action;
 	}
+	
+
 }
