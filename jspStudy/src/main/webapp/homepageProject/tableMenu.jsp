@@ -39,7 +39,7 @@ number = count - (currentPage - 1) * pageSize;
 		</b>
 		<table width="800">
 			<tr>
-				<td align="right"><a
+				<td align="right"  bgcolor="lightgrey" ><a
 					href="mainPage.jsp?tableflag=write">글쓰기</a></td>
 			</tr>
 		</table>
@@ -56,21 +56,21 @@ number = count - (currentPage - 1) * pageSize;
 		<table border="1" width="800" cellpadding="0" cellspacing="0"
 			align="center">
 			<tr height="30">
-				<td align="center" width="50">번 호</td>
-				<td align="center" width="250">제 목</td>
-				<td align="center" width="100">작성자</td>
-				<td align="center" width="150">작성일</td>
-				<td align="center" width="50">조 회</td>
-				<td align="center" width="50">댓 글</td>
-				<td align="center" width="100">IP</td>
+				<td align="center" width="50" bgcolor="lightgrey" >번 호</td>
+				<td align="center" width="250" bgcolor="lightgrey" >제 목</td>
+				<td align="center" width="100" bgcolor="lightgrey" >작성자</td>
+				<td align="center" width="150" bgcolor="lightgrey" >작성일</td>
+				<td align="center" width="50" bgcolor="lightgrey" >조 회</td>
+				<td align="center" width="50" bgcolor="lightgrey" >댓 글</td>
+				<td align="center" width="100" bgcolor="lightgrey" >IP</td>
 			</tr>
 			<%
 			for (BoardMemberVO bmvo : BoardMemberList) {
 				
 			%>
 			<tr height="30">
-				<td align="center" width="50"><%=number--%></td>
-				<td width="250">
+				<td align="center" width="50" bgcolor="lightgrey"><%=number--%></td>
+				<td width="250"  bgcolor="white"  >
 					<!-- 수정 <5> --> 
 					<%-- <a href="content.jsp">  --%>
 					<a href="mainPage.jsp?num=<%=bmvo.getNum()%>&pageNum=1&tableflag=select&cPageNum=1"> 
@@ -95,11 +95,11 @@ number = count - (currentPage - 1) * pageSize;
  }
  %>
 				</td>
-				<td align="center" width="100"><%=bmvo.getWriter()%></td>
-				<td align="center" width="150"><%=sdf.format(bmvo.getRegdate())%></td>
-				<td align="center" width="50"><%=bmvo.getReadcount()%></td>
-				<td align="center" width="50"><%=bmvo.getComments()%></td>
-				<td align="center" width="100"><%=bmvo.getIp()%></td>
+				<td align="center" width="100" bgcolor="white" ><%=bmvo.getWriter()%></td>
+				<td align="center" width="150" bgcolor="white" ><%=sdf.format(bmvo.getRegdate())%></td>
+				<td align="center" width="50" bgcolor="white" ><%=bmvo.getReadcount()%></td>
+				<td align="center" width="50" bgcolor="white" ><%=bmvo.getComments()%></td>
+				<td align="center" width="100" bgcolor="white" ><%=bmvo.getIp()%></td>
 			</tr>
 			<%
 			}
