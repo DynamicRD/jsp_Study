@@ -14,6 +14,10 @@ String cPageNum = request.getParameter("cPageNum");
 if (cPageNum == null) {
     cPageNum = "1";
 }
+String comment = request.getParameter("comment");
+if (comment == null) {
+		comment = "no";
+}
 // 3. 현재페이지 설정, start, end 
 int cCurrentPage = Integer.parseInt(cPageNum);
 int cStart = (cCurrentPage - 1) * cPageSize + 1; // 4페이지 시작보여줘 (4-1)*10+1=>31
@@ -22,8 +26,12 @@ System.out.println("cStart="+cStart);
 System.out.println("cEnd="+cEnd);
 //게시판 목록의 번호를 받아온다
 int numInt = 0;
+int commentNum = -1;
 if(request.getParameter("num") != null){
 numInt = Integer.parseInt(request.getParameter("num"));
+}
+if(request.getParameter("commentNum") != null){
+	commentNum = Integer.parseInt(request.getParameter("commentNum"));
 }
 
 SimpleDateFormat cSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -75,9 +83,9 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                 <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getIp()%></td>
                 <td align="center" width="150" bgcolor="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
                 <td align="center" width="100" bgcolor="lightgrey">
-										<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num='">
+										<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
 										&nbsp;&nbsp; 
-										<input type="button" value="삭제" onclick="document.location.href='mainPage.jsp?num='">
+										<input type="button" value="삭제" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1'">
 								</td>
             </tr>
             <tr>
@@ -98,15 +106,118 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                 </td>
             </tr>
             
+            <%
+						//댓글 바로아래 다는 기능            
+            if(comment.equals("yes")&&cNumber==commentNum){
+            	 // 새로운 글로 입력(num=0, ref=0, step=0, depth=0)
+            	 // 부모글에 대한 답변으로 입력(num=부모값, ref=부모값, step=부모값, depth=부모값)
+            	/*  int cNum = 0, cRef = 1, cStep = 0, cDepth = 0; */
+            	 
+            	     if (request.getParameter("cNum") != null) {
+            	        /*  cNum = Integer.parseInt(request.getParameter("cNum"));
+            	         cRef = Integer.parseInt(request.getParameter("cRef"));
+            	         cStep = Integer.parseInt(request.getParameter("cStep"));
+            	         cDepth = Integer.parseInt(request.getParameter("cDepth")); */
+            	     }
+            	     CommentMemberVO ccvo =  new CommentMemberVO();
+            	     ccvo.setBnum(numInt);
+            	     ccvo = cBdao.selectCommentMemberBnumDB(ccvo);
+            	     int ref=ccvo.getRef();
+            	     int step=ccvo.getStep();
+            	     int depth=ccvo.getDepth();
+            	     System.out.println("ref"+ref);
+            	     System.out.println("step"+step);
+            	     System.out.println("depth"+depth);
+            	%>
+            	
+            	    <form method="post" name="cWriteForm" action="commentWriteProc.jsp?commentPage=<%=numInt%>" onsubmit="return writeSave()">
+            	        <%if(session.getAttribute("id")!=null){%>
+            	            <input type="hidden" size="30" maxlength="30" name="cPass" value="<%=session.getAttribute("pass")%>" />
+            	        <%} %>        
+            	        	<input type="hidden" name="cNum" value="<%=cNumber%>"> 
+            	        	<input type="hidden" name="cRef" value="<%=ref%>"> 
+            	        	<input type="hidden" name="cStep" value="<%=step%>"> 
+            	        	<input type="hidden" name="cDepth" value="<%=depth%>">
+            	            <tr>
+            	                <td align="center" bgcolor="#9FF781">이름</td>
+            	                <td align="left"  bgcolor="#E0F8E0">
+            	                <%if(session.getAttribute("id")!=null){%>
+            	                    <input type="hidden" size="12" maxlength="12" name="cWriter" value="<%=session.getAttribute("id")%>"/>
+            	                    <%=session.getAttribute("id")%>
+            	                <%}else{ %>
+            	                    <input type="text" size="12" maxlength="12" name="cWriter" />
+            	                <%} %>
+            	                </td>
+            	                <td align="center" bgcolor="#9FF781">비밀번호</td>
+            	                <td  align="left"  bgcolor="#E0F8E0">
+            	                  <%if(session.getAttribute("id")==null){%>
+            	                    <input type="password" size="10" maxlength="10" name="cPass" />
+            	                   <%} %>        
+            	                </td>
+            	                <td colspan="2" align="center" bgcolor="#9FF781">
+            	                    <input type="submit" value="댓글쓰기" /> 
+            	                    <input type="reset" value="다시작성" />
+            	                </td>
+            	            </tr>
+            	            <tr>
+            	                <td align="center" bgcolor="#9FF781">내용</td>
+            	                <td  align="left" colspan="4" bgcolor="#E0F8E0">
+            	                    <textarea name="cContent" cols="60"></textarea>
+            	                </td>
+            	            </tr>
+            	    </form>
+            	<%
+            
+            	%>
+<% 
+            }
+%>
+            
+            
 <%
             }
         }
 %>
         </table>
 
-<br>
 
-
+<div  align="center">
+<%
+            if (cCount > 0) {
+            int cPageBlock = 5;
+            int cImsi = cCount % cPageSize == 0 ? 0 : 1;
+            int cPageCount = cCount / cPageSize + cImsi;
+            int cStartPage = (int)((cCurrentPage-1)/cPageBlock)*cPageBlock + 1;
+            int cEndPage = cStartPage + cPageBlock - 1;
+            if (cEndPage > cPageCount) cEndPage = cPageCount;
+            if (cStartPage > cPageBlock) { 
+%>
+                <a href="mainPage.jsp?pageNum=<%=cStartPage-cPageBlock%>">[이전]</a>
+<%
+                }
+            for (int cI = cStartPage ; cI <= cEndPage ; cI++) { 
+                if(cCurrentPage == cI){
+%>                    
+                <a href="mainPage.jsp?pageNum=<%= cI %>">[[<%= cI %>]]</a>
+<%                 
+                }else{
+%>                    
+                <a href="mainPage.jsp?pageNum=<%= cI %>">[<%= cI %>]</a>
+<%                 
+                }
+%>
+<%
+                }
+            if (cEndPage < cPageCount) { %>
+                <a href="mainPage.jsp?pageNum=<%=cStartPage+cPageBlock%>">[다음]</a>
+<%
+                }
+%>
+<%            
+        }
+%>
+		</div>
+<br><br>
 <!-- 쓰기영역 -->
 <%
  // 새로운 글로 입력(num=0, ref=0, step=0, depth=0)
@@ -168,41 +279,4 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
 
 
 
-
-<div  align="center">
-<%
-            if (cCount > 0) {
-            int cPageBlock = 5;
-            int cImsi = cCount % cPageSize == 0 ? 0 : 1;
-            int cPageCount = cCount / cPageSize + cImsi;
-            int cStartPage = (int)((cCurrentPage-1)/cPageBlock)*cPageBlock + 1;
-            int cEndPage = cStartPage + cPageBlock - 1;
-            if (cEndPage > cPageCount) cEndPage = cPageCount;
-            if (cStartPage > cPageBlock) { 
-%>
-                <a href="mainPage.jsp?pageNum=<%=cStartPage-cPageBlock%>">[이전]</a>
-<%
-                }
-            for (int cI = cStartPage ; cI <= cEndPage ; cI++) { 
-                if(cCurrentPage == cI){
-%>                    
-                <a href="mainPage.jsp?pageNum=<%= cI %>">[[<%= cI %>]]</a>
-<%                 
-                }else{
-%>                    
-                <a href="mainPage.jsp?pageNum=<%= cI %>">[<%= cI %>]</a>
-<%                 
-                }
-%>
-<%
-                }
-            if (cEndPage < cPageCount) { %>
-                <a href="mainPage.jsp?pageNum=<%=cStartPage+cPageBlock%>">[다음]</a>
-<%
-                }
-%>
-<%            
-        }
-%>
-		</div>
 	</main>

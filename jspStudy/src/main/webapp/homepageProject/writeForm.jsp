@@ -73,7 +73,7 @@ try {
 			<%if(session.getAttribute("id")==null){%>
 			<tr>
 				<td width="70" align="center"  bgcolor="lightgrey" >비밀번호</td>
-				<td width="330" align="left" >
+				<td width="330" align="left" bgcolor="white" >
 					<input type="password" size="10" maxlength="10" name="pass" />
 				</td>
 			</tr>

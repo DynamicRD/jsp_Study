@@ -34,6 +34,9 @@ cVo.setBnum(commentPage);
 if(session.getAttribute("id") == null){
     cVo.setWriter(cVo.getWriter() + "(비회원)");
 }
+if(cVo.getDepth() != 0){
+    cVo.setContent("[답글]"+cVo.getContent());
+}
 
 CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 boolean cFlag = cBdao.insertDB(cVo);

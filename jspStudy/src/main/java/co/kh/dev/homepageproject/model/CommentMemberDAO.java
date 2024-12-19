@@ -34,12 +34,12 @@ public class CommentMemberDAO {
 	private final String SELECT_COUNT_BNUM_SQL = "select count(*) as count from CommentMember where b_num = ?";
 	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from CommentMember where b_num = ?";
 	private final String SELECT_ONE_SQL = "select * from CommentMember where num = ?";
+	private final String SELECT_ONE_BNUM_SQL = "select * from CommentMember where b_num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from CommentMember where num = ? and pass = ?";
 	private final String DELETE_SQL = "DELETE FROM CommentMember WHERE NUM = ? AND PASS = ?";
 	private final String UPDATE_SQL = "update CommentMember set writer=?,content=? where num=?";
 	private final String INSERT_SQL = "insert into CommentMember(num,b_num, writer, pass, regdate, ref, step, depth, content, ip) values(CommentMember_seq.nextval,?,?,?,?,?,?,?,?,?)";
 	private final String UPDATE_STEP_SQL = "update CommentMember set step=step+1 where ref= ? and step > ?";
-	private final String UPDATE_READCOUNT_SQL = "update CommentMember set readcount=readcount+1 where num = ?";
 
 	public Boolean insertDB(CommentMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
@@ -55,6 +55,7 @@ public class CommentMemberDAO {
 		// num 현재 보드속에 가장최고값에 +1, 값이 하나도 없으면 1
 		try {
 			pstmt = con.prepareStatement(SELECT_MAX_NUM_SQL);
+			pstmt.setInt(1, vo.getBnum());
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				number = rs.getInt("num") + 1;
@@ -166,15 +167,44 @@ public class CommentMemberDAO {
 		CommentMemberVO bvo = null;
 		int count = 0;
 		try {
-			// 조회수 증가
-
-			pstmt = con.prepareStatement(UPDATE_READCOUNT_SQL);
-			pstmt.setInt(1, vo.getNum());
-			pstmt.executeUpdate();
 
 			// 글 전체내용 조회
 			pstmt = con.prepareStatement(SELECT_ONE_SQL);
 			pstmt.setInt(1, vo.getNum());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				int num = rs.getInt("num");
+				int bnum = rs.getInt("b_num");
+				String writer = rs.getString("writer");
+				String pass = rs.getString("pass");
+				Timestamp regdate = rs.getTimestamp("regdate");
+				int ref = rs.getInt("ref");
+				int step = rs.getInt("step");
+				int depth = rs.getInt("depth");
+				String content = rs.getString("content");
+				String ip = rs.getString("ip");
+				bvo = new CommentMemberVO(num, bnum, writer, pass, ref, step, depth, regdate, content, ip);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return bvo;
+	}
+	
+	public CommentMemberVO selectCommentMemberBnumDB(CommentMemberVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		CommentMemberVO bvo = null;
+		int count = 0;
+		try {
+			
+			// 글 전체내용 조회
+			pstmt = con.prepareStatement(SELECT_ONE_BNUM_SQL);
+			pstmt.setInt(1, vo.getBnum());
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int num = rs.getInt("num");

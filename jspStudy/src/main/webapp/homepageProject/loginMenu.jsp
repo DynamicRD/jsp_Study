@@ -3,12 +3,12 @@
 	<div class="login_block">
 		<table width="200" id="login_table">
 			<tr>
-				<th class="login_input">아이디</th>
-				<td><input type="text" name="id" required></td>
+				<th class="login_input" bgcolor="lightgrey">아이디</th>
+				<td bgcolor="white"><input type="text" name="id" required></td>
 			</tr>
 			<tr>
-				<th class="login_input">비번</th>
-				<td><input type="password" name="pass" required></td>
+				<th class="login_input" bgcolor="lightgrey">비번</th>
+				<td  bgcolor="white"><input type="password" name="pass" required></td>
 			</tr>
 			<br>
 		</table>
