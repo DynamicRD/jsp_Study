@@ -1,12 +1,15 @@
 package com.kh.dev.student.control;
 
 import com.kh.dev.student.action.Action;
+import com.kh.dev.student.action.DeleteFormAction;
+import com.kh.dev.student.action.DeleteProcAction;
 import com.kh.dev.student.action.IdCheckAction;
 import com.kh.dev.student.action.IndexAction;
 import com.kh.dev.student.action.LoginFormAction;
 import com.kh.dev.student.action.LoginProcAction;
 import com.kh.dev.student.action.LogoutAction;
 import com.kh.dev.student.action.ModifyFormAction;
+import com.kh.dev.student.action.ModifyProcAction;
 import com.kh.dev.student.action.RegFormAction;
 import com.kh.dev.student.action.RegProcAction;
 import com.kh.dev.student.action.ZipCheckAction;
@@ -56,7 +59,13 @@ public class ActionFactory {
 			action = new ModifyFormAction();
 			break;
 		case "/modifyProc.do":
-			action = new ModifyFormAction();
+			action = new ModifyProcAction();
+			break;
+		case "/deleteForm.do":
+			action = new DeleteFormAction();
+			break;
+		case "/deleteProc.do":
+			action = new DeleteProcAction();
 			break;
 		default:
 			action = new IndexAction();
