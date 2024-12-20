@@ -22,8 +22,6 @@ if (comment == null) {
 int cCurrentPage = Integer.parseInt(cPageNum);
 int cStart = (cCurrentPage - 1) * cPageSize +1 ; // 4페이지 시작보여줘 (4-1)*10+1=>31
 int cEnd = (cCurrentPage - 1) * cPageSize + 10; // 4페이지 끝번호 보여줘 4*10 =>40
-System.out.println("cStart="+cStart);
-System.out.println("cEnd="+cEnd);
 //게시판 목록의 번호를 받아온다
 int numInt = 0;
 int commentNum = -1;
@@ -43,12 +41,10 @@ int cNumber = 0;
 ArrayList<CommentMemberVO> cCommentMemberList = null;
 CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 
-System.out.println("numInt="+numInt);
 //현재페이지의 댓글 개수 가져온다
 CommentMemberVO cccmvo = new CommentMemberVO();
 cccmvo.setBnum(numInt);
 int cCount = cBdao.selectCountDB(cccmvo); // 전체 글수
-System.out.println("cCount ="+cCount);
 
  if (cCount > 0) {
     // 현재페이지 내용 10개만 가져온다
@@ -66,14 +62,14 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         <%
         if (cCount == 0) {
         %>
-        <table width="500" border="1" cellpadding="0" cellspacing="0">
+        <table width="600" border="1" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="center" bgcolor="lightgrey">댓글이 없습니다.</td>
         </table>
         <%
         } else {
         %>
-        <table border="1" width="500" cellpadding="0" cellspacing="0"
+        <table border="1" width="600" cellpadding="0" cellspacing="0"
             align="center">
             <%
             for (CommentMemberVO cmvo : cCommentMemberList) {
@@ -85,21 +81,30 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                 <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getWriter()%></td>
                 <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getIp()%></td>
                 <td align="center" width="150" bgcolor="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
-                <td align="center" width="100" bgcolor="lightgrey">
+                <td align="center" width="50" bgcolor="lightgrey">
+                	<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
+								</td>
+								<td align="center" width="100" bgcolor="lightgrey">
                 <%}else{ %>
                 <td align="center" width="50" bgcolor="#CEF6F5"><%=cNumber++%></td>
                 <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getWriter()%></td>
                 <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getIp()%></td>
                 <td align="center" width="150" bgcolor="#CEF6F5"><%=cSdf.format(cmvo.getRegdate())%></td>
-                <td align="center" width="100" bgcolor="#CEF6F5">
-                <%} %>
-										<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
-										&nbsp;&nbsp; 
-										<input type="button" value="삭제" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1'">
+                <td align="center" width="50" bgcolor="#CEF6F5">
+                	<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
 								</td>
+								<td align="center" width="100" bgcolor="#CEF6F5">
+                <%} %>
+										<form method="post" name="cDeleteForm" action="commentDeleteProc.jsp">
+											<input type="password" name="pass" placeholder="패스워드" style="width: 80%;" />
+											<input type="hidden" name="truePass" value="<%=cmvo.getPass() %>" />
+											<input type="hidden" name="deleteNum" value="<%=cmvo.getNum() %>" />
+											<input type="submit" value="삭제하기" />
+										</form>
+								</td>		
             </tr>
             <tr>
-                <td width="250" colspan="5" bgcolor="white" align="left">
+                <td width="250" colspan="6" bgcolor="white" align="left">
                     <%
                     // 6. depth 값에 따라서 5배수 증가를 해서 화면에 보여줘야한다
                     // depth : 1 => 길이:5, 2=>10
@@ -163,7 +168,7 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
             	            </tr>
             	            <tr>
             	                <td align="center" bgcolor="#9FF781">내용</td>
-            	                <td  align="left" colspan="4" bgcolor="#E0F8E0">
+            	                <td  align="left" colspan="5" bgcolor="#E0F8E0">
             	                    <textarea name="cContent" cols="60"></textarea>
             	                </td>
             	            </tr>

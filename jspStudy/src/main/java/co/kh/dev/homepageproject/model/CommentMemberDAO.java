@@ -38,7 +38,7 @@ public class CommentMemberDAO {
 	private final String SELECT_ONE_SQL = "select * from CommentMember where num = ?";
 	private final String SELECT_ONE_BNUM_SQL = "select * from CommentMember where b_num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from CommentMember where num = ? and pass = ?";
-	private final String DELETE_SQL = "DELETE FROM CommentMember WHERE NUM = ? AND PASS = ?";
+	private final String DELETE_SQL = "DELETE FROM CommentMember WHERE NUM = ?";
 	private final String UPDATE_SQL = "update CommentMember set writer=?,content=? where num=?";
 	private final String INSERT_SQL = "insert into CommentMember(num,numref,b_num, writer, pass, regdate, ref, step, depth, content, ip) values(commentmember_SEQ.nextval,?,?,?,?,?,?,?,?,?,?)";
 	private final String UPDATE_STEP_SQL = "update CommentMember set step=step+1 where ref= ? and step > ?";
@@ -123,7 +123,7 @@ public class CommentMemberDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			cp.dbClose(con, pstmt);
+			cp.dbClose(con, pstmt,rs);
 		}
 		return (count > 0) ? true : false;
 	}
@@ -355,7 +355,7 @@ public class CommentMemberDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				cp.dbClose(con, pstmt);
+				cp.dbClose(con, pstmt,rs);
 			}
 		} else {
 			returnValue = 2;
@@ -373,10 +373,11 @@ public class CommentMemberDAO {
 		try {
 			pstmt = con.prepareStatement(DELETE_SQL);
 			pstmt.setInt(1, vo.getNum());
-			pstmt.setString(2, vo.getPass());
 			count = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			cp.dbClose(con, pstmt);
 		}
 		return (count!=0)?(true):(false);
 	}
