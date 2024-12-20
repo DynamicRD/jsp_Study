@@ -35,7 +35,7 @@
 			<div class="left2"></div>
 		</div>
 <!-- 		가운데     	-->
-		<div class="center">
+		<div class="center" >
 <% 
 		  	//회원가입 화면을 띄운다
 				if(flag.equals("regform")){

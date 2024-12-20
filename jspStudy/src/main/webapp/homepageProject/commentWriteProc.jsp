@@ -14,6 +14,10 @@ cVo.setStep(Integer.parseInt(request.getParameter("cStep")));
 cVo.setDepth(Integer.parseInt(request.getParameter("cDepth")));
 cVo.setPass(request.getParameter("cPass"));
 cVo.setContent(request.getParameter("cContent"));
+if(request.getParameter("checkNum") !=null){
+	cVo.setNum(1);
+  cVo.setContent("[답글]"+cVo.getContent());
+}
 
 // commentPage 값 처리
 String commentPageStr = request.getParameter("commentPage");
@@ -34,10 +38,8 @@ cVo.setBnum(commentPage);
 if(session.getAttribute("id") == null){
     cVo.setWriter(cVo.getWriter() + "(비회원)");
 }
-if(cVo.getDepth() != 0){
-    cVo.setContent("[답글]"+cVo.getContent());
-}
 
+System.out.println("num = "+cVo.getNum());
 CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 boolean cFlag = cBdao.insertDB(cVo);
 

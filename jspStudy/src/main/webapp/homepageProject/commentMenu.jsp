@@ -20,7 +20,7 @@ if (comment == null) {
 }
 // 3. 현재페이지 설정, start, end 
 int cCurrentPage = Integer.parseInt(cPageNum);
-int cStart = (cCurrentPage - 1) * cPageSize + 1; // 4페이지 시작보여줘 (4-1)*10+1=>31
+int cStart = (cCurrentPage - 1) * cPageSize +1 ; // 4페이지 시작보여줘 (4-1)*10+1=>31
 int cEnd = (cCurrentPage - 1) * cPageSize + 10; // 4페이지 끝번호 보여줘 4*10 =>40
 System.out.println("cStart="+cStart);
 System.out.println("cEnd="+cEnd);
@@ -45,7 +45,9 @@ CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 
 System.out.println("numInt="+numInt);
 //현재페이지의 댓글 개수 가져온다
-int cCount = cBdao.selectCountDB(numInt); // 전체 글수
+CommentMemberVO cccmvo = new CommentMemberVO();
+cccmvo.setBnum(numInt);
+int cCount = cBdao.selectCountDB(cccmvo); // 전체 글수
 System.out.println("cCount ="+cCount);
 
  if (cCount > 0) {
@@ -66,7 +68,7 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         %>
         <table width="500" border="1" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="center">댓글이 없습니다.</td>
+                <td align="center" bgcolor="lightgrey">댓글이 없습니다.</td>
         </table>
         <%
         } else {
@@ -78,11 +80,19 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                 cmvo.toString();
             %>
             <tr height="30">
+            	<%if(cmvo.getStep()==0){ %>
                 <td align="center" width="50" bgcolor="lightgrey"><%=cNumber++%></td>
                 <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getWriter()%></td>
                 <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getIp()%></td>
                 <td align="center" width="150" bgcolor="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
                 <td align="center" width="100" bgcolor="lightgrey">
+                <%}else{ %>
+                <td align="center" width="50" bgcolor="#CEF6F5"><%=cNumber++%></td>
+                <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getWriter()%></td>
+                <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getIp()%></td>
+                <td align="center" width="150" bgcolor="#CEF6F5"><%=cSdf.format(cmvo.getRegdate())%></td>
+                <td align="center" width="100" bgcolor="#CEF6F5">
+                <%} %>
 										<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
 										&nbsp;&nbsp; 
 										<input type="button" value="삭제" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1'">
@@ -97,8 +107,8 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
                     if (cmvo.getDepth() > 0) {
                         cWid = 5 * cmvo.getDepth();
                     %>
-                        <img src="images/level.gif" width="<%=cWid%>" height="16">    <!-- 공백 -->
-                        <img src="images/re.gif">
+                        <img src="img/level.gif" width="<%=cWid%>" height="16">    <!-- 공백 -->
+                        <img src="img/re.gif">
                         <%
                     }
                         %>
@@ -119,25 +129,17 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
             	         cStep = Integer.parseInt(request.getParameter("cStep"));
             	         cDepth = Integer.parseInt(request.getParameter("cDepth")); */
             	     }
-            	     CommentMemberVO ccvo =  new CommentMemberVO();
-            	     ccvo.setBnum(numInt);
-            	     ccvo = cBdao.selectCommentMemberBnumDB(ccvo);
-            	     int ref=ccvo.getRef();
-            	     int step=ccvo.getStep();
-            	     int depth=ccvo.getDepth();
-            	     System.out.println("ref"+ref);
-            	     System.out.println("step"+step);
-            	     System.out.println("depth"+depth);
             	%>
             	
             	    <form method="post" name="cWriteForm" action="commentWriteProc.jsp?commentPage=<%=numInt%>" onsubmit="return writeSave()">
             	        <%if(session.getAttribute("id")!=null){%>
             	            <input type="hidden" size="30" maxlength="30" name="cPass" value="<%=session.getAttribute("pass")%>" />
             	        <%} %>        
-            	        	<input type="hidden" name="cNum" value="<%=cNumber%>"> 
-            	        	<input type="hidden" name="cRef" value="<%=ref%>"> 
-            	        	<input type="hidden" name="cStep" value="<%=step%>"> 
-            	        	<input type="hidden" name="cDepth" value="<%=depth%>">
+            	        	<input type="hidden" name="cNum" value="1"> 
+            	        	<input type="hidden" name="checkNum" value="1"> 
+            	        	<input type="hidden" name="cRef" value="<%=cmvo.getRef()%>"> 
+            	        	<input type="hidden" name="cStep" value="<%=cmvo.getStep()%>"> 
+            	        	<input type="hidden" name="cDepth" value="<%=cmvo.getDepth()%>">
             	            <tr>
             	                <td align="center" bgcolor="#9FF781">이름</td>
             	                <td align="left"  bgcolor="#E0F8E0">

@@ -4,12 +4,29 @@ import java.sql.Timestamp;
 
 public class CommentMemberVO {
 	private int num;
+	private int numRef;
 	private int Bnum;
 	private String writer;
 	private String pass;
 	private int ref;
 	private int step;
 	private int depth;
+	public CommentMemberVO(int num, int numRef, int bnum, String writer, String pass, int ref, int step, int depth,
+			Timestamp regdate, String content, String ip) {
+		super();
+		this.num = num;
+		this.numRef = numRef;
+		Bnum = bnum;
+		this.writer = writer;
+		this.pass = pass;
+		this.ref = ref;
+		this.step = step;
+		this.depth = depth;
+		this.regdate = regdate;
+		this.content = content;
+		this.ip = ip;
+	}
+
 	private Timestamp regdate;
 	private String content;
 	private String ip;
@@ -44,6 +61,15 @@ public class CommentMemberVO {
 		Bnum = bnum;
 	}
 
+	public int getNumRef() {
+		return numRef;
+	}
+	
+	
+	public void setNumRef(int numRef) {
+		this.numRef = numRef;
+	}
+	
 
 	public int getNum() {
 		return num;
@@ -117,10 +143,12 @@ public class CommentMemberVO {
 		this.ip = ip;
 	}
 
+
 	@Override
 	public String toString() {
-		return "BoardVO [num=" + num + ", writer=" + writer + ", pass="
-				+ pass +", ref=" + ref + ", step=" + step + ", depth=" + depth
+		return "CommentMemberVO [num=" + num + ", numRef=" + numRef + ", Bnum=" + Bnum + ", writer=" + writer
+				+ ", pass=" + pass + ", ref=" + ref + ", step=" + step + ", depth=" + depth + ", regdate=" + regdate
 				+ ", content=" + content + ", ip=" + ip + "]";
 	}
+
 }
