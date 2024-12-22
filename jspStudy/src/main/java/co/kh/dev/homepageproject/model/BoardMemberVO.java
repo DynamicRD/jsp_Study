@@ -15,6 +15,15 @@ public class BoardMemberVO {
 	private Timestamp regdate;
 	private String content;
 	private String ip;
+	private String searchCheck;
+	
+	public String getSearchCheck() {
+		return searchCheck;
+	}
+
+	public void setSearchCheck(String searchCheck) {
+		this.searchCheck = searchCheck;
+	}
 
 	public BoardMemberVO() {
 		super();

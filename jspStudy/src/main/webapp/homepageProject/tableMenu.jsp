@@ -6,6 +6,7 @@
 <%
 // 1. 페이징기법 -  페이지 사이즈:1페이지에 10개 보이기
 int pageSize = 10;
+int count = 0;
 // 2. 페이징기법 - 페이지번호 선택
 request.setCharacterEncoding("utf-8");
 String pageNum = request.getParameter("pageNum");
@@ -16,6 +17,8 @@ if (pageNum == null) {
 int currentPage = Integer.parseInt(pageNum);
 int start = (currentPage - 1) * pageSize + 1; //4페이지 시작보여줘		(4-1)*10+1=>31
 int end = (currentPage - 1) * pageSize + 10; //4페이지 끝번호 보여줘 4*10 =>40
+String searchCheck = (String)session.getAttribute("searchType");
+String searchData = (String)session.getAttribute("search");
 
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
@@ -24,12 +27,36 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 int number = 0;
 ArrayList<BoardMemberVO> BoardMemberList = null;
 BoardMemberDAO bdao = BoardMemberDAO.getInstance();
-
-int count = bdao.selectCountDB();//전체 글수
+BoardMemberVO bmmmvo = new BoardMemberVO();
+if(searchCheck == null){
+	searchCheck = "none";
+	bmmmvo.setSearchCheck(searchCheck);
+	count = bdao.selectCountDB(bmmmvo);//전체 글수
+}else if(searchCheck.equals("subject")){
+	bmmmvo.setSearchCheck(searchCheck);
+	bmmmvo.setSubject(searchData);
+	System.out.println("본문 문제"+"%"+searchData+"%");
+	count = bdao.selectCountDB(bmmmvo);//전체 글수
+}else if(searchCheck.equals("writer")){
+	bmmmvo.setSearchCheck(searchCheck);
+	bmmmvo.setWriter(searchData);
+	count = bdao.selectCountDB(bmmmvo);//전체 글수
+}else if(searchCheck.equals("content")){
+	bmmmvo.setSearchCheck(searchCheck);
+	bmmmvo.setContent(searchData);
+	count = bdao.selectCountDB(bmmmvo);//전체 글수
+}
+System.out.println("count = "+count);
 if (count > 0) {
 	//현재페이지 내용 10개만 가져온다
-	BoardMemberList = bdao.selectStartEndDB(start, end);
+	BoardMemberList = bdao.selectStartEndDB(start, end,bmmmvo);
 }
+//솔직히 좋은방법은 아닌듯
+session.setAttribute("searchType",null);
+session.setAttribute("search", null);
+
+
+
 //5. 만약 4페이지를 가져왔다면(31~40)을 가져왔따면 NUMBER = 40 전체객수 100 1페이지(100~91) 2페이지(90~81)
 number = count - (currentPage - 1) * pageSize;
 %>
@@ -39,8 +66,10 @@ number = count - (currentPage - 1) * pageSize;
 		</b>
 		<table width="800">
 			<tr>
-				<td align="right"   class="lightgrey" ><a
-					href="mainPage.jsp?tableflag=write">글쓰기</a></td>
+				<td align="right"   class="lightgrey" >
+				<a href="mainPage.jsp">목록</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="mainPage.jsp?tableflag=write">글쓰기</a>
+				</td>
 			</tr>
 		</table>
 		<%
@@ -146,4 +175,16 @@ number = count - (currentPage - 1) * pageSize;
  <% 			
 		 }
 %>
+</div>
+<br>
+<div>
+		<form method="POST" name="searchForm" action="searchProc.jsp">
+		<select name="searchType">
+            <option value="subject">제목</option>
+            <option value="writer">작성자</option>
+            <option value="content">내용</option>
+   	</select>
+		<input class="search" type="text" name="search"	size="20" maxlength="20" required="required">
+		<input class="search" type="submit" value="검색"> 
+		</form>
 </div>

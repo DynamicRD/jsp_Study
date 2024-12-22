@@ -31,8 +31,20 @@ public class BoardMemberDAO {
 	private final String SELECT_START_END_SQL = " select * from "
 			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth,comments, content, ip "
 			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=?";
+	private final String SELECT_START_END_SUBJECT_SQL = " select * from "
+			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth,comments, content, ip "
+			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=? and subject LIKE ?";
+	private final String SELECT_START_END_WRITER_SQL = " select * from "
+			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth,comments, content, ip "
+			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=? and writer LIKE ?";
+	private final String SELECT_START_END_CONTENT_SQL = " select * from "
+			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth,comments, content, ip "
+			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=? and content LIKE ?";
 	private final String SELECT_ADMIN_START_END_SQL = "SELECT * FROM BoardMember WHERE writer LIKE '%(관리자)'";
 	private final String SELECT_COUNT_SQL = "select count(*) as count from BoardMember";
+	private final String SELECT_COUNT_SUBJECT_SQL = "SELECT COUNT(*) AS count FROM BoardMember WHERE subject LIKE ?";
+	private final String SELECT_COUNT_WRITER_SQL = "SELECT COUNT(*) AS count FROM BoardMember WHERE writer LIKE ?";
+	private final String SELECT_COUNT_CONTENT_SQL = "SELECT COUNT(*) AS count FROM BoardMember WHERE content LIKE ?";
 	private final String SELECT_ADMIN_COUNT_SQL = "select count(*) as count from BoardMember WHERE writer LIKE '%(관리자)'";
 	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from BoardMember";
 	private final String SELECT_ONE_SQL = "select * from BoardMember where num = ?";
@@ -113,14 +125,34 @@ public class BoardMemberDAO {
 		return (count > 0) ? true : false;
 	}
 
-	public int selectCountDB() {
+	public int selectCountDB(BoardMemberVO bvo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int count = 0;
 		try {
-			pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+			switch (bvo.getSearchCheck()) {
+			case "none":
+				pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+				break;
+			case "subject":
+				pstmt = con.prepareStatement(SELECT_COUNT_SUBJECT_SQL);
+				pstmt.setString(1, "%"+bvo.getSubject()+"%");
+				System.out.println("한국어 문제"+"%"+bvo.getSubject()+"%");
+				break;
+			case "writer":
+				pstmt = con.prepareStatement(SELECT_COUNT_WRITER_SQL);
+				pstmt.setString(1, "%"+bvo.getWriter()+"%");
+				break;
+			case "content":
+				pstmt = con.prepareStatement(SELECT_COUNT_CONTENT_SQL);
+				pstmt.setString(1, "%"+bvo.getContent()+"%");
+				break;
+			default:
+				pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+				break;
+			}
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				count = rs.getInt("count");
@@ -261,16 +293,44 @@ public class BoardMemberDAO {
 	}
 
 	
-	public ArrayList<BoardMemberVO> selectStartEndDB(int start, int end) {
+	public ArrayList<BoardMemberVO> selectStartEndDB(int start, int end,BoardMemberVO bvo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<BoardMemberVO> BoardMemberList = new ArrayList<BoardMemberVO>(end-start+1);	//arrayList갯수정해줌
 		try {
-			pstmt = con.prepareStatement(SELECT_START_END_SQL);
-			pstmt.setInt(1, start);
-			pstmt.setInt(2, end);
+			switch (bvo.getSearchCheck()) {
+			case "none":
+				pstmt = con.prepareStatement(SELECT_START_END_SQL);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				break;
+			case "subject":
+				pstmt = con.prepareStatement(SELECT_START_END_SUBJECT_SQL);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				pstmt.setString(3, "%"+bvo.getSubject()+"%");
+				break;
+			case "writer":
+				pstmt = con.prepareStatement(SELECT_START_END_WRITER_SQL);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				pstmt.setString(3, "%"+bvo.getWriter()+"%");
+				break;
+			case "content":
+				pstmt = con.prepareStatement(SELECT_START_END_CONTENT_SQL);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				pstmt.setString(3, "%"+bvo.getContent()+"%");
+				break;
+			default:
+				pstmt = con.prepareStatement(SELECT_START_END_SQL);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				break;
+			}
+			
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int num = rs.getInt("num");
