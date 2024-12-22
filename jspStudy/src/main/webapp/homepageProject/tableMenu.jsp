@@ -39,37 +39,37 @@ number = count - (currentPage - 1) * pageSize;
 		</b>
 		<table width="800">
 			<tr>
-				<td align="right"  bgcolor="lightgrey" ><a
+				<td align="right"   class="lightgrey" ><a
 					href="mainPage.jsp?tableflag=write">글쓰기</a></td>
 			</tr>
 		</table>
 		<%
 		if (count == 0) {
 		%>
-		<table width="800" border="1" cellpadding="0" cellspacing="0">
+		<table width="800"   cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="center">게시판에 저장된 글이 없습니다.</td>
 		</table>
 		<%
 		} else {
 		%>
-		<table border="1" width="800" cellpadding="0" cellspacing="0"
+		<table   width="800" cellpadding="0" cellspacing="0"
 			align="center">
 			<tr height="30">
-				<td align="center" width="50" bgcolor="lightgrey" >번 호</td>
-				<td align="center" width="250" bgcolor="lightgrey" >제 목</td>
-				<td align="center" width="100" bgcolor="lightgrey" >작성자</td>
-				<td align="center" width="150" bgcolor="lightgrey" >작성일</td>
-				<td align="center" width="50" bgcolor="lightgrey" >조 회</td>
-				<td align="center" width="50" bgcolor="lightgrey" >댓 글</td>
-				<td align="center" width="100" bgcolor="lightgrey" >IP</td>
+				<td align="center" width="50"  class="lightgrey" >번 호</td>
+				<td align="center" width="250"  class="lightgrey" >제 목</td>
+				<td align="center" width="100"  class="lightgrey" >작성자</td>
+				<td align="center" width="150"  class="lightgrey" >작성일</td>
+				<td align="center" width="50"  class="lightgrey" >조 회</td>
+				<td align="center" width="50"  class="lightgrey" >댓 글</td>
+				<td align="center" width="100"  class="lightgrey" >IP</td>
 			</tr>
 			<%
 			for (BoardMemberVO bmvo : BoardMemberList) {
 				
 			%>
 			<tr height="30">
-				<td align="center" width="50" bgcolor="lightgrey"><%=number--%></td>
+				<td align="center" width="50"  class="lightgrey"><%=number--%></td>
 				<td width="250"  bgcolor="white"  >
 					<!-- 수정 <5> --> 
 					<%-- <a href="content.jsp">  --%>

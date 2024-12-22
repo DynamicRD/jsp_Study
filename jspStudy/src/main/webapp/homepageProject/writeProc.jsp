@@ -15,6 +15,8 @@ vo.setRegdate(new Timestamp(System.currentTimeMillis()));
 vo.setIp(request.getRemoteAddr());
 if(session.getAttribute("id")==null){
 	vo.setWriter(vo.getWriter()+"(비회원)");
+}else if((session.getAttribute("id")).equals("admin")){
+	vo.setWriter(vo.getWriter()+"(관리자)");
 }
 BoardMemberDAO bdao = BoardMemberDAO.getInstance();
 boolean flag = bdao.insertDB(vo);

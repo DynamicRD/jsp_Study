@@ -32,7 +32,6 @@ public class CommentMemberDAO {
 			+ "(select rownum AS rnum, num,numref,b_num, writer, pass, regdate, ref, step, depth, content, ip "
 			+ "from (select * from CommentMember order by ref desc, step desc)) where numref>=? and numref<=? and b_num = ?";
 	private final String SELECT_COUNT_BNUM_SQL = "select count(*) as count from CommentMember where b_num = ?";
-	private final String SELECT_COUNT_BNUM_REF_SQL = "select count(*) as count from CommentMember where b_num = ? and step = 0";
 	private final String SELECT_MAX_NUM_SQL = "select max(numref) as numref from CommentMember where b_num = ?";
 	private final String SELECT_MAX_STEP_SQL = "select max(step) as step from CommentMember where b_num = ? and ref =?";
 	private final String SELECT_ONE_SQL = "select * from CommentMember where num = ?";
@@ -41,7 +40,6 @@ public class CommentMemberDAO {
 	private final String DELETE_SQL = "DELETE FROM CommentMember WHERE NUM = ?";
 	private final String UPDATE_SQL = "update CommentMember set writer=?,content=? where num=?";
 	private final String INSERT_SQL = "insert into CommentMember(num,numref,b_num, writer, pass, regdate, ref, step, depth, content, ip) values(commentmember_SEQ.nextval,?,?,?,?,?,?,?,?,?,?)";
-	private final String UPDATE_STEP_SQL = "update CommentMember set step=step+1 where ref= ? and step > ?";
 
 	public Boolean insertDB(CommentMemberVO vo) throws SQLException {
 		ConnectionPool cp = ConnectionPool.getInstance();

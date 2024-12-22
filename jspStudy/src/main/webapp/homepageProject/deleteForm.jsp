@@ -28,6 +28,13 @@ String pageNum = request.getParameter("pageNum");
 				</tr>
 				<tr height="30">
 					<td align=center bgcolor="lightgrey">
+<%}else if(session.getAttribute("id").equals("admin")){%>
+					<td align=center bgcolor="white">
+						<b>정말 삭제하시겠습니까?.</b>
+					</td>
+				</tr>
+				<tr height="30">
+					<td align=center bgcolor="lightgrey">
 <%}else{ %>
 	<td align=center bgcolor="lightgrey"><b>비밀번호를 입력해 주세요.</b></td>
 				</tr>

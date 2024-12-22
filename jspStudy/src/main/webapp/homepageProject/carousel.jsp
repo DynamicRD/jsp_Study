@@ -1,10 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 	<div class="slideshow">
 		<div class="slideshow_slides">
-			<a href="#"><img src="/images/slide-1.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-2.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-3.jpg" alt=""></a> 
-			<a href="#"><img src="/images/slide-4.jpg" alt=""></a>
+			<a href="#"><img src="/images/slide-1.png" alt=""></a> 
+			<a href="#"><img src="/images/slide-2.png" alt=""></a> 
+			<a href="#"><img src="/images/slide-3.png" alt=""></a> 
+			<a href="#"><img src="/images/slide-4.png" alt=""></a>
 		</div>
 		<div class="slideshow_nav">
 			<a href="#" class="prev"><i

@@ -29,18 +29,25 @@ public class BoardMemberDAO {
 
 	private final String SELECT_SQL = "select * from BoardMember order by num desc";
 	private final String SELECT_START_END_SQL = " select * from "
-			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth, content, ip "
+			+ "(select rownum AS rnum, num, writer, subject, pass, regdate, readcount, ref, step, depth,comments, content, ip "
 			+ "from (select * from BoardMember order by ref desc, step asc)) where rnum>=? and rnum<=?";
+	private final String SELECT_ADMIN_START_END_SQL = "SELECT * FROM BoardMember WHERE writer LIKE '%(관리자)'";
 	private final String SELECT_COUNT_SQL = "select count(*) as count from BoardMember";
+	private final String SELECT_ADMIN_COUNT_SQL = "select count(*) as count from BoardMember WHERE writer LIKE '%(관리자)'";
 	private final String SELECT_MAX_NUM_SQL = "select max(num) as num from BoardMember";
 	private final String SELECT_ONE_SQL = "select * from BoardMember where num = ?";
 	private final String SELECT_PASS_ID_CHECK_SQL = "select count(*) count from BoardMember where num = ? and pass = ?";
 	private final String DELETE_SQL = "DELETE FROM BoardMember WHERE NUM = ? AND PASS = ?";
+	private final String DELETE_ADMIN_SQL = "DELETE FROM BoardMember WHERE NUM = ?";
 	private final String UPDATE_SQL = "update BoardMember set writer=?,subject=?,content=? where num=?";
 	private final String INSERT_SQL = "insert into BoardMember(num, writer, subject, pass, regdate, ref, step, depth, content, ip) values(BoardMember_seq.nextval,?,?,?,?,?,?,?,?,?)";
 	private final String UPDATE_STEP_SQL = "update BoardMember set step=step+1 where ref= ? and step > ?";
 	private final String UPDATE_READCOUNT_SQL = "update BoardMember set readcount=readcount+1 where num = ?";
-
+	private final String ADD_COMMENT_READCOUNT_SQL = "update boardmember set comments = comments + 1 where num = ?";
+	private final String DOWN_COMMENT_READCOUNT_SQL = "update boardmember set comments = comments - 1 where num = ?";
+	
+	
+	
 	public Boolean insertDB(BoardMemberVO vo) {
 		ConnectionPool cp = ConnectionPool.getInstance();
 		Connection con = cp.dbCon();
@@ -114,6 +121,26 @@ public class BoardMemberDAO {
 		int count = 0;
 		try {
 			pstmt = con.prepareStatement(SELECT_COUNT_SQL);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return count;
+	}
+	
+	public int selectAdminCountDB() {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		try {
+			pstmt = con.prepareStatement(SELECT_ADMIN_COUNT_SQL);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				count = rs.getInt("count");
@@ -255,10 +282,35 @@ public class BoardMemberDAO {
 				int ref = rs.getInt("ref");
 				int step = rs.getInt("step");
 				int depth = rs.getInt("depth");
+				int conmments = rs.getInt("comments");
 				String content = rs.getString("content");
 				String ip = rs.getString("ip");
-				BoardMemberVO vo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, regdate,
-						content, ip);
+				BoardMemberVO vo = new BoardMemberVO(num, writer, subject, pass, readcount, ref, step, depth, conmments, regdate, content, ip);
+				BoardMemberList.add(vo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return BoardMemberList;
+	}
+	
+	public ArrayList<BoardMemberVO> selectAdminStartEndDB() {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<BoardMemberVO> BoardMemberList = new ArrayList<BoardMemberVO>();	//arrayList갯수정해줌
+		try {
+			pstmt = con.prepareStatement(SELECT_ADMIN_START_END_SQL);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String subject = rs.getString("subject");
+				int num = rs.getInt("num");
+				BoardMemberVO vo = new BoardMemberVO();
+				vo.setNum(num);
+				vo.setSubject(subject);
 				BoardMemberList.add(vo);
 			}
 		} catch (SQLException e) {
@@ -325,14 +377,49 @@ public class BoardMemberDAO {
 		
 		// 패스워드가 맞는지 점검필요
 		try {
-			pstmt = con.prepareStatement(DELETE_SQL);
+			if(vo.getWriter().equals("admin")) {
+			pstmt = con.prepareStatement(DELETE_ADMIN_SQL);
 			pstmt.setInt(1, vo.getNum());
-			pstmt.setString(2, vo.getPass());
 			count = pstmt.executeUpdate();
+			}else {
+			pstmt = con.prepareStatement(DELETE_SQL);
+			pstmt.setInt(1, vo.getNum());	
+			pstmt.setString(2, vo.getPass());
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return (count!=0)?(true):(false);
+	}
+	
+	public void commentAddDB(BoardMemberVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		int count=0;
+		
+		try {
+			pstmt = con.prepareStatement(ADD_COMMENT_READCOUNT_SQL);
+			pstmt.setInt(1, vo.getNum());
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void commentDownDB(BoardMemberVO vo) {
+		ConnectionPool cp = ConnectionPool.getInstance();
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		int count=0;
+		
+		try {
+			pstmt = con.prepareStatement(DOWN_COMMENT_READCOUNT_SQL);
+			pstmt.setInt(1, vo.getNum());
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

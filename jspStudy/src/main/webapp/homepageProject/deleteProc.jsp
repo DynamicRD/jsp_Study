@@ -6,19 +6,19 @@ request.setCharacterEncoding("utf-8");
 int num = Integer.parseInt(request.getParameter("num"));
 String pageNum = request.getParameter("pageNum");
 String pass = request.getParameter("pass");
+String id = (String)session.getAttribute("id");
 %>
 <% 
 BoardMemberDAO bdao = BoardMemberDAO.getInstance();
 BoardMemberVO vo = new BoardMemberVO();
 vo.setNum(num);
 vo.setPass(pass);
+vo.setWriter(id);
 boolean check = bdao.deleteDB(vo);
 if (check) {
 %>
 <meta http-equiv="Refresh" content="0;url=mainPage.jsp?pageNum=<%=pageNum%>">
-<%
-} else {
-%>
+<%}else{ %>
 <script>
 	alert("비밀번호가 맞지 않습니다");
 	history.go(-1);

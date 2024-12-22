@@ -18,17 +18,17 @@ try {
 		<form method="post" name="writeform" action="updateProc.jsp?pageNum=<%=pageNum%>" onsubmit="return writeSave()">
 			<input type="hidden" name="num" value="<%=bvo.getNum()%>">
 			
-			<table width="400" border="1" cellspacing="0" cellpadding="0"
+			<table width="400"   cellspacing="0" cellpadding="0"
 				 align="center">
 				<tr>
-					<td width="70" align="center"  bgcolor="lightgrey" >이 름</td>
+					<td width="70" align="center"   class="lightgrey" >이 름</td>
 					<td align="left" width="330"  bgcolor="white" ><input type="hidden" size="10"
 						maxlength="10" name="writer" value="<%=bvo.getWriter()%>">
 						<%=bvo.getWriter()%>
 					</td>
 				</tr>
 				<tr>
-					<td width="70" align="center" bgcolor="lightgrey" >제 목</td>
+					<td width="70" align="center"  class="lightgrey" >제 목</td>
 					<td align="left" width="330"  bgcolor="white" ><input type="text" size="40"
 						maxlength="50" name="subject" value="<%=bvo.getSubject()%>"></td>
 				</tr>
@@ -38,7 +38,7 @@ try {
 						maxlength="30" name="email" value="<%=bvo.getEmail()%>"></td>
 				</tr> --%>
 				<tr>
-					<td width="70" align="center" bgcolor="lightgrey" >내 용</td>
+					<td width="70" align="center"  class="lightgrey" >내 용</td>
 					<td align="left" width="330"  bgcolor="white" ><textarea name="content"
 							rows="13" cols="40">
         <%=bvo.getContent()%></textarea></td>
@@ -53,7 +53,7 @@ try {
 					<td colspan=2 align="center">
 				<%}else{ %>
 				<tr>
-					<td colspan=2 align="center" bgcolor="lightgrey" >
+					<td colspan=2 align="center"  class="lightgrey" >
 					<input type="hidden" size="8" name="pass" value=<%=session.getAttribute("pass")%>>
 				<%} %>
     				<input type="submit" value="글수정">

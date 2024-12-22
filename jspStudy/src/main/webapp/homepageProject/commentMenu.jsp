@@ -62,14 +62,14 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         <%
         if (cCount == 0) {
         %>
-        <table width="600" border="1" cellpadding="0" cellspacing="0">
+        <table width="600"   cellpadding="0" cellspacing="0">
             <tr>
-                <td align="center" bgcolor="lightgrey">댓글이 없습니다.</td>
+                <td align="center"  class="lightgrey">댓글이 없습니다.</td>
         </table>
         <%
         } else {
         %>
-        <table border="1" width="600" cellpadding="0" cellspacing="0"
+        <table   width="600" cellpadding="0" cellspacing="0"
             align="center">
             <%
             for (CommentMemberVO cmvo : cCommentMemberList) {
@@ -77,29 +77,36 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
             %>
             <tr height="30">
             	<%if(cmvo.getStep()==0){ %>
-                <td align="center" width="50" bgcolor="lightgrey"><%=cNumber++%></td>
-                <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getWriter()%></td>
-                <td align="center" width="100" bgcolor="lightgrey"><%=cmvo.getIp()%></td>
-                <td align="center" width="150" bgcolor="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
-                <td align="center" width="50" bgcolor="lightgrey">
+                <td align="center" width="50"  class="lightgrey"><%=cNumber++%></td>
+                <td align="center" width="100"  class="lightgrey"><%=cmvo.getWriter()%></td>
+                <td align="center" width="100"  class="lightgrey"><%=cmvo.getIp()%></td>
+                <td align="center" width="150"  class="lightgrey"><%=cSdf.format(cmvo.getRegdate())%></td>
+                <td align="center" width="50"  class="lightgrey">
                 	<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
 								</td>
-								<td align="center" width="100" bgcolor="lightgrey">
+								<td align="center" width="100"  class="lightgrey">
                 <%}else{ %>
-                <td align="center" width="50" bgcolor="#CEF6F5"><%=cNumber++%></td>
-                <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getWriter()%></td>
-                <td align="center" width="100" bgcolor="#CEF6F5"><%=cmvo.getIp()%></td>
-                <td align="center" width="150" bgcolor="#CEF6F5"><%=cSdf.format(cmvo.getRegdate())%></td>
-                <td align="center" width="50" bgcolor="#CEF6F5">
+                <td align="center" width="50"  class="lightgreen"><%=cNumber++%></td>
+                <td align="center" width="100"  class="lightgreen"><%=cmvo.getWriter()%></td>
+                <td align="center" width="100"  class="lightgreen"><%=cmvo.getIp()%></td>
+                <td align="center" width="150"  class="lightgreen"><%=cSdf.format(cmvo.getRegdate())%></td>
+                <td align="center" width="50"  class="lightgreen">
                 	<input type="button" value="답변" onclick="document.location.href='mainPage.jsp?num=<%=numInt %>&pageNum=1&tableflag=select&cPageNum=1&comment=yes&commentNum=<%=cNumber%>'">
 								</td>
-								<td align="center" width="100" bgcolor="#CEF6F5">
+								<td align="center" width="100"  class="lightgreen">
                 <%} %>
 										<form method="post" name="cDeleteForm" action="commentDeleteProc.jsp">
-											<input type="password" name="pass" placeholder="패스워드" style="width: 80%;" />
 											<input type="hidden" name="truePass" value="<%=cmvo.getPass() %>" />
+											<input type="hidden" name="returnPage" value="<%=numInt%>" />
 											<input type="hidden" name="deleteNum" value="<%=cmvo.getNum() %>" />
+											<%
+												if(session.getAttribute("id")!=null && ((String)(session.getAttribute("id"))).equals("admin")){
+											%>
+											<input type="submit" value="관리자 권한삭제" />
+											<%}else{ %>
+											<input type="password" name="pass" placeholder="패스워드" style="width: 80%;" />
 											<input type="submit" value="삭제하기" />
+											<%}%>
 										</form>
 								</td>		
             </tr>
@@ -247,30 +254,30 @@ cNumber = (cCurrentPage - 1) * cPageSize +1;
         	<input type="hidden" name="cRef" value="<%=cRef%>"> 
         	<input type="hidden" name="cStep" value="<%=cStep%>"> 
         	<input type="hidden" name="cDepth" value="<%=cDepth%>">
-        <table width="500" border="1" cellpadding="0" cellspacing="0" align="center">
+        <table width="600"   cellpadding="0" cellspacing="0" align="center">
             <tr>
-                <td align="center" bgcolor="lightgrey">이름</td>
-                <td align="left"  bgcolor="white">
+                <td width="50" align="center"  class="lightgrey">이름</td>
+                <td width="100"align="left"  bgcolor="white">
                 <%if(session.getAttribute("id")!=null){%>
-                    <input type="hidden" size="12" maxlength="12" name="cWriter" value="<%=session.getAttribute("id")%>"/>
+                    <input type="hidden" size="10" maxlength="12" name="cWriter" value="<%=session.getAttribute("id")%>"/>
                     <%=session.getAttribute("id")%>
                 <%}else{ %>
-                    <input type="text" size="12" maxlength="12" name="cWriter" />
+                    <input type="text" size="10" maxlength="12" name="cWriter" />
                 <%} %>
                 </td>
-                <td align="center" bgcolor="lightgrey">비밀번호</td>
-                <td  align="left"  bgcolor="white">
+                <td width="100" align="center"  class="lightgrey">비밀번호</td>
+                <td width="100" align="left"  bgcolor="white">
                   <%if(session.getAttribute("id")==null){%>
                     <input type="password" size="10" maxlength="10" name="cPass" />
                    <%} %>        
                 </td>
-                <td colspan="2" align="center" bgcolor="lightgrey">
+                <td width="100" colspan="2" align="center"  class="lightgrey">
                     <input type="submit" value="댓글쓰기" /> 
                     <input type="reset" value="다시작성" />
                 </td>
             </tr>
             <tr>
-                <td align="center" bgcolor="lightgrey">내용</td>
+                <td align="center"  class="lightgrey">내용</td>
                 <td  align="left" colspan="4" bgcolor="white">
                     <textarea name="cContent" cols="60"></textarea>
                 </td>

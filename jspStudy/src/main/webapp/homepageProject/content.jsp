@@ -20,31 +20,31 @@ int step=bvo.getStep();
 int depth=bvo.getDepth();
 %>
 	<main>
-		<b>글내용 보기</b> <br></br>
+		<br></br>
 		<form>
-			<table width="700" border="1" cellspacing="0" cellpadding="0"
+			<table width="700"   cellspacing="0" cellpadding="0"
 				 align="center">
 				<tr height="30">
-					<td align="center" width="125" bgcolor="lightgrey">글번호</td>
+					<td align="center" width="75"   class="lightgrey">글번호</td>
 					<td align="center" width="100" align="center" bgcolor="white"><%=bvo.getNum()%></td>
-					<td align="center" width="50" bgcolor="lightgrey">작성자</td>
+					<td align="center" width="75"   class="lightgrey">작성자</td>
 					<td align="center" width="125" align="center" bgcolor="white"><%=bvo.getWriter()%></td>
-					<td align="center" width="50" bgcolor="lightgrey">작성일</td>
+					<td align="center" width="75"   class="lightgrey">작성일</td>
 					<td align="center" width="125" align="center" bgcolor="white"><%= sdf.format(bvo.getRegdate())%></td>
-					<td align="center" width="50" bgcolor="lightgrey">조회수</td>
+					<td align="center" width="75"   class="lightgrey">조회수</td>
 					<td align="center" width="50" align="center" bgcolor="white"><%=bvo.getReadcount()%></td>
 				<tr height="30">
-					<td align="center" width="125" bgcolor="lightgrey">글제목</td>
+					<td align="center" width="125"   class="lightgrey">글제목</td>
 					<td align="center" width="375" align="center" colspan="7" bgcolor="white"><%=bvo.getSubject()%></td>
 				</tr>
 				<tr>
-    			<td align="center" width="125" bgcolor="lightgrey">글내용</td>
+    			<td align="center" width="125"   class="lightgrey">글내용</td>
     			<td align="left" width="375" colspan="7" bgcolor="white" style="height: 400px; overflow: auto; vertical-align: top;">
         	<%=bvo.getContent() %>
    			 </td>
 				</tr>
 				<tr height="30">
-					<td colspan="8 align="right" bgcolor="lightgrey">
+					<td colspan="8 align="right"   class="lightgrey">
 						<%
     		String sessionId = (String) session.getAttribute("id");  // 회원 id
     		String writer = bvo.getWriter();  // 글쓴이 이름
@@ -52,6 +52,7 @@ int depth=bvo.getDepth();
 
     		// 글쓴이 이름에서 '(비회원)'이 포함되어 있는지 체크
     		boolean isNonMemberPost = writer.endsWith("(비회원)");
+    		boolean isAdmin = writer.endsWith("(관리자)");
 				%>
 
 				<%-- 수정 권한 체크 --%>
@@ -60,8 +61,14 @@ int depth=bvo.getDepth();
 						&nbsp;&nbsp;&nbsp;&nbsp; 
 						<input type="button" value="글삭제" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete&writer=<%=writer%>'">
 						&nbsp;&nbsp;&nbsp;&nbsp; <!-- 수정<1> --> 
-					<% } %>
-						
+					<% } 
+						if( isMember && sessionId.equals("admin")){
+						%>
+						<input type="button" value="관리자 권한 삭제" onclick="document.location.href='mainPage.jsp?num=<%=_num%>&pageNum=<%=pageNum%>&tableflag=delete&writer=<%=writer%>'">
+						&nbsp;&nbsp;&nbsp;&nbsp; <!-- 수정<1> --> 
+						<%
+						}
+						%>
 						<input type="button" value="글목록" onclick="document.location.href='mainPage.jsp?pageNum=<%=pageNum%>'">
 
 					</td>

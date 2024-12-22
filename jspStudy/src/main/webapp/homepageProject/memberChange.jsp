@@ -13,7 +13,7 @@ mvo = mdao.selectOneDB(mvo);
 <main>
 		<form method="post" action="memberChangeProc.jsp" name="regForm" class="myform2" onsubmit="return checkForm2()">
 			<input type="hidden" name="id" value="<%=id %>" />
-			<table border="1">
+			<table  >
 				<tr>
 					<td  class="login_table" colspan="2" align="center">회원 정보 변경</td>
 				</tr>

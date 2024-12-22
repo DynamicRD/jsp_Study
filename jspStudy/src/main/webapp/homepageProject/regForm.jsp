@@ -1,7 +1,7 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 	<main >
 		<form method="post" action="regProc.jsp" name="regForm" class="myform">
-			<table border="1">
+			<table  >
 				<tr>
 					<td  class="login_table" colspan="2" align="center">회원 가입 정보 입력</td>
 				</tr>

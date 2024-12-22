@@ -37,6 +37,8 @@ public class MemberDAO {
 	private final String INSERT_SQL = "insert into Member values(?,?,?,?,?,?,?,?)";
 	private final String SELECT_ZIP_SQL = "select * from zipcode where dong like ?";
 	private final String MEMBER_UPDATE_SQL = "UPDATE member SET pass = ?, name = ?, phone = ?, email = ?, zipcode = ?, address1 = ?, address2 = ? WHERE id = ?";
+	private final String FIND_MEMBER_ID = "SELECT * FROM Member WHERE NAME = ? AND EMAIL = ? AND PHONE = ?";
+	private final String FIND_MEMBER_PASS = "SELECT * FROM Member WHERE ID = ? AND EMAIL = ? AND PHONE = ?";
 	
 	// 전체를 DB에서 출력
 
@@ -60,6 +62,52 @@ public class MemberDAO {
 			cp.dbClose(con, pstmt, rs);
 		}
 		return (count != 0 ) ? true : false;
+	}
+	
+	public String findMemberID(MemberVO mvo) {
+		ConnectionPool cp = ConnectionPool.getInstance(); 
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String id = null;
+		try {
+			pstmt = con.prepareStatement(FIND_MEMBER_ID);
+			pstmt.setString(1, mvo.getName());
+			pstmt.setString(2, mvo.getEmail());
+			pstmt.setString(3, mvo.getPhone());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+			id = rs.getString("id");
+			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return (id != null ) ? id : "none";
+	}
+	
+	public String findMemberPASS(MemberVO mvo) {
+		ConnectionPool cp = ConnectionPool.getInstance(); 
+		Connection con = cp.dbCon();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String pass = null;
+		try {
+			pstmt = con.prepareStatement(FIND_MEMBER_PASS);
+			pstmt.setString(1, mvo.getId());
+			pstmt.setString(2, mvo.getEmail());
+			pstmt.setString(3, mvo.getPhone());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				pass = rs.getString("pass");
+			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cp.dbClose(con, pstmt, rs);
+		}
+		return (pass != null ) ? pass : "none";
 	}
 
 	public ArrayList<ZipCodeVO> selectZipCode(ZipCodeVO zvo) {

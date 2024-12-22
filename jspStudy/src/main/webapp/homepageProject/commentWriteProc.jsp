@@ -1,3 +1,5 @@
+<%@page import="co.kh.dev.homepageproject.model.BoardMemberVO"%>
+<%@page import="co.kh.dev.homepageproject.model.BoardMemberDAO"%>
 <%@page import="co.kh.dev.homepageproject.model.CommentMemberVO"%>
 <%@page import="co.kh.dev.homepageproject.model.CommentMemberDAO"%>
 <%@page import="java.sql.Timestamp"%>
@@ -37,13 +39,18 @@ cVo.setBnum(commentPage);
 
 if(session.getAttribute("id") == null){
     cVo.setWriter(cVo.getWriter() + "(비회원)");
+}else if((session.getAttribute("id")).equals("admin")){
+	cVo.setWriter(cVo.getWriter()+"(관리자)");
 }
-
 System.out.println("num = "+cVo.getNum());
 CommentMemberDAO cBdao = CommentMemberDAO.getInstance();
 boolean cFlag = cBdao.insertDB(cVo);
 
 if (cFlag == true) {
+		BoardMemberDAO bmdao = BoardMemberDAO.getInstance();
+		BoardMemberVO bvo = new BoardMemberVO();
+		bvo.setNum(commentPage);
+		bmdao.commentAddDB(bvo);
     response.sendRedirect("mainPage.jsp?num=" + commentPage + "&pageNum=1&tableflag=select&cPageNum=1");
 } else {
 %>
